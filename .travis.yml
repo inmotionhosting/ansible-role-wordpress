@@ -1,0 +1,33 @@
+---
+language: python
+services: docker
+
+addons:
+  apt:
+    packages:
+      - python3-pip
+
+env:
+  global:
+    - GIT_BASE="https://github.com/inmotionhosting"
+    - ROLE_DIR="/home/travis/.ansible/roles"
+  matrix:
+    - MOLECULE_DISTRO="centos-7"
+    - MOLECULE_DISTRO="centos-8"
+    - MOLECULE_DISTRO="debian-9"
+    - MOLECULE_DISTRO="debian-10"
+    - MOLECULE_DISTRO="ubuntu-16.04"
+    - MOLECULE_DISTRO="ubuntu-18.04"
+    - MOLECULE_DISTRO="ubuntu-20.04"
+
+install:
+  - pip install -r requirements.txt
+  - git clone $GIT_BASE/ansible-role-apache $ROLE_DIR/ansible-role-apache
+  - git clone $GIT_BASE/ansible-role-mysql $ROLE_DIR/ansible-role-mysql
+  - git clone $GIT_BASE/ansible-role-php_fpm $ROLE_DIR/ansible-role-php_fpm
+
+script:
+  - molecule test
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
