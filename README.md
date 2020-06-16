@@ -57,14 +57,6 @@ Example Playbook
     - role: inmotionhosting.mysql
     - role: inmotionhosting.php_fpm
     - role: inmotionhosting.wordpress
-
-- hosts: wordpress_ultrastack
-  roles:
-    - role: inmotionhosting.apache
-    - role: inmotionhosting.mysql
-    - role: inmotionhosting.php_fpm
-    - role: inmotionhosting.wordpress
-    - role: inmotionhosting.ultrastack #includes nginx_proxy and redis
 ```
 
 License
