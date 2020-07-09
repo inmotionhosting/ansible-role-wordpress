@@ -1,15 +1,24 @@
-inmotionhosting.wordpress
-=========
+[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-wordpress.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-wordpress) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-wordpress.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-wordpress/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-wordpress.svg)](https://github.com/inmotionhosting/ansible-role-wordpress/stargazers)
+
+# Ansible Role: WordPress
 
 Modular Ansible Role for deploying and configuring WordPress.
-
-[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-wordpress.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-wordpress)
 
 # Requirements
 
 * CentOS 7.x or later
 * Debian 9 or later
 * Ubuntu 16.04 LTS or later
+
+# Dependencies
+
+### Required
+
+```yaml
+- role: inmotionhosting.apache
+- role: inmotionhosting.mysql
+- role: inmotionhosting.php_fpm
+```
 
 # Role Variables
 
@@ -82,18 +91,7 @@ Whether a Let's Encrypt SSL should be generated.
 
 ___Note:___ This should only be used when you have a domain pointed to the target WordPress installation.
 
-
-# Dependencies
-
-### Required
-
-```yaml
-- role: inmotionhosting.apache
-- role: inmotionhosting.mysql
-- role: inmotionhosting.php_fpm
-```
-
-# Example Playbook
+## Example Playbook
 
 ```yaml
 - hosts: wordpress_lamp
@@ -104,12 +102,10 @@ ___Note:___ This should only be used when you have a domain pointed to the targe
     - role: inmotionhosting.wordpress
 ```
 
-License
--------
+## License
 
 GPLv3
 
-Author Information
-------------------
+## Author Information
 
 [InMotion Hosting](https://inmotionhosting.com)
