@@ -6,8 +6,8 @@ driver:
   name: docker
 
 platforms:
-  - name: "${MOLECULE_NAME:-wordpress}-${MOLECULE_ID:-local}-${MOLECULE_DISTRO:-centos-7}"
-    image: "inmotionhosting/molecule-images:${MOLECULE_DISTRO:-centos-7-lamp}"
+  - name: "molecule-ansible-role-wordpress-${MOLECULE_DISTRO:-centos-7}"
+    image: "inmotionhosting/molecule-images:${MOLECULE_DISTRO:-centos-7}"
     command: ""
     pre_build_image: true
     privileged: true
