@@ -2,7 +2,7 @@
 # {{ ansible_managed }}
 
 {% if not use_letsencrypt %}
-<VirtualHost *:{{ apache_port }}>
+<VirtualHost *:{{ apache_port_http }}>
     ServerName {{ site_domain }}
     ServerAlias www.{{ site_domain }}
 
@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if use_letsencrypt %}
-<VirtualHost *:{{ apache_secure_port }}>
+<VirtualHost *:{{ apache_port_https }}>
     ServerName {{ site_domain }}
     ServerAlias www.{{ site_domain }}
 
