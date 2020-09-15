@@ -101,6 +101,15 @@
     - wp_plugins | length > 0
   with_items: "{{ wp_plugins }}"
 
+- name: (WordPress) Uninstall default plugins
+  command: >-
+    wp plugin uninstall hello
+  args:
+    chdir: "{{ wp_system_path }}"
+    removes: "{{ wp_system_path }}/wp-content/plugins/hello.php"
+  become: true
+  become_user: "{{ system_user }}"
+
 - name: (WordPress) Configure W3 Total Cache
   command: >-
     wp w3-total-cache option set
