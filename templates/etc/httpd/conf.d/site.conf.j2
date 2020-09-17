@@ -23,6 +23,8 @@
     DocumentRoot /home/{{ system_user }}/{{ wp_system_folder }}/
     DirectoryIndex index.html index.php
 
+    TraceEnable Off
+
     <Directory /home/{{ system_user }}/{{ wp_system_folder }}/>
         Options FollowSymLinks
         AllowOverride All
@@ -55,6 +57,8 @@
 
     DocumentRoot /home/{{ system_user }}/{{ wp_system_folder }}
     DirectoryIndex index.html index.php
+
+    TraceEnable Off
 
     <Directory /home/{{ system_user }}/{{ wp_system_folder }}>
         Options FollowSymLinks
