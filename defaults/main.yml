@@ -21,6 +21,9 @@ system_user: "wordpress"
 wp_system_folder: "doc_root"
 wp_system_path: "/home/{{ system_user }}/{{ wp_system_folder }}"
 
+# Source for wp-wpcli
+wp_cli_source: "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+
 # These variables control the database name, user, and the user's
 # password that WordPress will use in the wp-config.php file.
 #
