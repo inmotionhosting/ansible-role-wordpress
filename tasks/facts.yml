@@ -52,4 +52,3 @@
   when: >-
     children_buffer|float < 0.0
     or children_buffer|float >= 1.0
-  with_items: "{{ wp_required_ints }}"
