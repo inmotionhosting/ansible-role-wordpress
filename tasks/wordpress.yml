@@ -1,15 +1,15 @@
 ---
 # install-WordPress.yml
 
-- name: (WordPress) Check if wp-cli is installed
+- name: Check if wp-cli is installed
   stat:
     path: /usr/bin/wp
   changed_when: false
   register: wpcli_installed
 
-- name: (WordPress) Install wp-cli if missing
+- name: Install wp-cli if missing
   get_url:
-    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    url: "{{ wp_cli_source }}"
     dest: /usr/bin/wp
     mode: a+x
   when: not wpcli_installed.stat.exists
@@ -18,19 +18,19 @@
 # MySQL
 #
 
-- name: (WordPress) Set random MySQL password when not defined
+- name: Set random MySQL password when not defined
   set_fact:
     wp_db_pass: "{{ pass_gen_alias }}"
   when: wp_db_pass is undefined
 
-- name: (WordPress) Create WordPress database
+- name: Create WordPress database
   mysql_db:
     login_unix_socket: "{{ mysql_socket_path }}"
     name: "{{ wp_db_name }}"
     state: present
   register: wp_db_setup
 
-- name: (WordPress) Create DB user
+- name: Create DB user
   mysql_user:
     login_unix_socket: "{{ mysql_socket_path }}"
     name: "{{ wp_db_user }}"
@@ -42,15 +42,15 @@
 # WordPress
 #
 
-- name: (WordPress) Ensure install directory exists
+- name: Ensure install directory exists
   file:
     path: "{{ wp_system_path }}"
     state: directory
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
-    mode: "0755"
+    mode: 0755
 
-- name: (WordPress) Download WordPress Core
+- name: Download WordPress Core
   command: >-
     wp core download
   args:
@@ -59,7 +59,7 @@
   become: true
   become_user: "{{ system_user }}"
 
-- name: (WordPress) Create wp-config.php
+- name: Create wp-config.php
   command: >-
     wp config create
     --dbname="{{ wp_db_name }}"
@@ -71,7 +71,7 @@
   become: true
   become_user: "{{ system_user }}"
 
-- name: (WordPress) Install WordPress core
+- name: Install WordPress core
   command: >-
     wp core install
     --url="{{ site_domain }}"
@@ -88,7 +88,7 @@
 # Plugins
 #
 
-- name: (WordPress) Install plugins
+- name: Install plugins
   command: >-
     wp plugin install {{ item }} --activate
   args:
@@ -101,7 +101,7 @@
     - wp_plugins | length > 0
   with_items: "{{ wp_plugins }}"
 
-- name: (WordPress) Uninstall default plugins
+- name: Uninstall default plugins
   command: >-
     wp plugin uninstall hello
   args:
@@ -110,7 +110,7 @@
   become: true
   become_user: "{{ system_user }}"
 
-- name: (WordPress) Configure W3 Total Cache
+- name: Configure W3 Total Cache
   command: >-
     wp w3-total-cache option set
     {{ item.setting }} {{ item.value }} --type={{ item.type }}
@@ -128,7 +128,7 @@
 # Themes
 #
 
-- name: (WordPress) Install themes
+- name: Install themes
   command: >-
     wp theme install {{ item }} --activate
   args:
