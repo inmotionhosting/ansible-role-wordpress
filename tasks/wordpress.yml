@@ -50,6 +50,14 @@
     group: "{{ system_user }}"
     mode: 0755
 
+# SELinux only
+- name: Enable and configure SELinux
+  include: selinux.yml
+  when:
+    - selinux_enabled is defined
+    - selinux_enabled
+    - ansible_os_family == "RedHat"
+
 - name: Download WordPress Core
   command: >-
     wp core download

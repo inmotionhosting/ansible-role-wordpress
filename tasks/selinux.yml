@@ -1,0 +1,37 @@
+---
+
+- name: Install SELinux management packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libselinux-python3
+    - policycoreutils-python3
+    - libsemanage-python3
+
+- name: Enable SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: enforcing
+
+- name: Register file context for Wordpress doc root
+  community.general.sefcontext:
+    target: "{{ wp_system_path }}(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
+  register: filecontext
+
+- name: Run restore context to doc root
+  command: "restorecon -Rv /home/{{ system_user }}"
+
+- name: Set httpd_execmem
+  ansible.posix.seboolean:
+    name: httpd_execmem
+    state: yes
+    persistent: yes
+  with_items:
+    - httpd_setrlimit
+    - httpd_execmem
+    - httpd_can_network_connect
+    - httpd_can_network_connect_db
+    - httpd_read_user_content
