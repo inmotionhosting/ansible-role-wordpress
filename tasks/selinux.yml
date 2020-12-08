@@ -35,9 +35,9 @@
 - name: Run restore context to doc root
   command: "restorecon -Rv /home/{{ system_user }}"
 
-- name: Set httpd_execmem
+- name: Set SELinux booleans
   ansible.posix.seboolean:
-    name: httpd_execmem
+    name: "{{ item }}"
     state: yes
     persistent: yes
   with_items:
