@@ -146,3 +146,11 @@
   become: true
   become_user: "{{ system_user }}"
   changed_when: false
+
+# SELinux only
+- name: Enable and configure SELinux
+  include: selinux.yml
+  when:
+    - selinux_enabled is defined
+    - selinux_enabled
+    - ansible_os_family == "RedHat"
