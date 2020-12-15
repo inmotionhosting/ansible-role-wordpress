@@ -25,6 +25,16 @@
 
     TraceEnable Off
 
+    <Location "/fpm-status">
+        Order Allow,Deny 
+        Allow from 127.0.0.1
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
+    </Location>
+
+    <Location "/fpm-ping">
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
+    </Location>
+
     <Directory /home/{{ system_user }}/{{ wp_system_folder }}/>
         Options FollowSymLinks
         AllowOverride All
@@ -59,6 +69,16 @@
     DirectoryIndex index.html index.php
 
     TraceEnable Off
+
+    <Location "/fpm-status">
+        Order Allow,Deny 
+        Allow from 127.0.0.1
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
+    </Location>
+
+    <Location "/fpm-ping">
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
+    </Location>
 
     <Directory /home/{{ system_user }}/{{ wp_system_folder }}>
         Options FollowSymLinks

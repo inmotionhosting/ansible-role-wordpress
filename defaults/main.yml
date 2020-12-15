@@ -124,7 +124,7 @@ wp_themes: []
 # Meta
 #
 
-# Apache config based on precense of ultrastack
+# Apache config based on presence of ultrastack
 use_ultrastack: false
 
 # Whether a letsencrypt SSL should be generated.
