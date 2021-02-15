@@ -14,7 +14,6 @@
       - site_user
       - site_pass
     wp_required_ints:
-      - max_request_workers
       - php_proc_mem
 
 - name: Check required WordPress variables (strings)
