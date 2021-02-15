@@ -1,6 +1,4 @@
 ---
-# handlers file for inmotion.wordpress
-
 - name: restart apache
   service:
     name: "{{ apache_daemon }}"

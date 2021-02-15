@@ -1,5 +1,4 @@
 ---
-
 - name: Set lists of required variables
   set_fact:
     wp_required_strings:

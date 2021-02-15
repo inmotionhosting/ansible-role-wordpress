@@ -1,6 +1,4 @@
 ---
-# install-WordPress.yml
-
 - name: Check if wp-cli is installed
   stat:
     path: /usr/bin/wp

@@ -1,5 +1,4 @@
 ---
-
 - name: (Python 3) Install SELinux management packages
   package:
     name: "{{ item }}"
