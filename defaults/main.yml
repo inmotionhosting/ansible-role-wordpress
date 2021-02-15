@@ -1,6 +1,4 @@
 ---
-# defaults file for inmotion.wordpress
-
 #
 # WordPress
 #
@@ -134,12 +132,6 @@ use_letsencrypt: false
 # WordPress database user via 'wp_db_pass'.
 pass_gen_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
 
-#
-# Apache Config
-#
-
-# Should be a multiple of 25
-max_request_workers: 250
 
 #
 # PHP Config
@@ -153,7 +145,8 @@ children_buffer: 0.75
 #
 # SELinux
 #
-selinux_enabled: false
+
+selinux_enabled: "{{ ansible_selinux.status }}"
 selinux_booleans:
   - httpd_setrlimit
   - httpd_execmem

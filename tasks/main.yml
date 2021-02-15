@@ -1,6 +1,4 @@
 ---
-# tasks file for inmotion.wordpress
-
 #
 # Setup
 #
@@ -30,17 +28,6 @@
 - name: Include Debian-family tasks
   include: Debian.yml
   when: ansible_os_family == "Debian"
-
-- name: Configure httpd mpm module
-  template:
-    src: etc/httpd/modules.d/00-mpm.conf.j2
-    dest: "{{ apache_modules_config_path }}/00-mpm.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart apache
-    - restart php-fpm
 
 - name: Create httpd virtual host
   template:
@@ -150,7 +137,5 @@
 # SELinux only
 - name: Enable and configure SELinux
   include: selinux.yml
-  when:
-    - selinux_enabled is defined
-    - selinux_enabled
-    - ansible_os_family == "RedHat"
+  when: >-
+    or ansible_selinux.status == "enabled"
