@@ -7,8 +7,8 @@ galaxy_info:
   license: GPLv3
   min_ansible_version: 2.9
   collections:
-  - ansible.posix
-  - community.general
+    - ansible.posix
+    - community.general
 
   platforms:
     - name: EL
@@ -21,7 +21,6 @@ galaxy_info:
         - buster
     - name: Ubuntu
       versions:
-        - xenial
         - bionic
         - focal
 

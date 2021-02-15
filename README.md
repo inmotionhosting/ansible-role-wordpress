@@ -1,19 +1,19 @@
 [![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-wordpress.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-wordpress) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-wordpress.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-wordpress/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-wordpress.svg)](https://github.com/inmotionhosting/ansible-role-wordpress/stargazers)
 
 # Ansible Role: WordPress
-
 Modular Ansible Role for deploying and configuring WordPress.
 
 # Requirements
+This Ansible role supports the two latest stable releases of specific
+server-focused Linux distributions and aims to follow their deprecation
+policies. Additionally we will focus on supporting the latest two stable
+releases of each, which at the time of writing are as follows:
 
-* CentOS 7.x or later
-* Debian 9 or later
-* Ubuntu 16.04 LTS or later
+* CentOS 7, 8
+* Debian 9, 10
+* Ubuntu 18.04, 20.04
 
 # Dependencies
-
-### Required
-
 ```yaml
 - role: inmotionhosting.apache
 - role: inmotionhosting.mysql
@@ -23,11 +23,9 @@ Modular Ansible Role for deploying and configuring WordPress.
 ```
 
 # Role Variables
-
 Available variables are listed below with their default values (you can also see `defaults/main.yml`)
 
 ### WordPress site installation options
-
 ```
 site_domain: "{{ ansible_fqdn }}"
 site_email: "email@example.com"
@@ -51,7 +49,6 @@ WordPress plugins to install and activate.
 ___Note:___ If using the UltraStack optimizations it's highly recommended to use the `w3-total-cache` plugin.
 
 ### System user/path options
-
 ```
 system_user: "wordpress"
 ```
@@ -72,7 +69,6 @@ children_buffer # PHP-FPM: What percentage of the server's memory PHP can consum
 These are configuration settings for Apache and PHP.
 
 ### Database options
-
 ```
 wp_db_name: "{{ system_user }}"
 wp_db_user: "{{ system_user }}"
@@ -84,7 +80,6 @@ These are database user/name for the WordPress installation.
 ___Note:___ By default the `wp_db_pass` is automatically generated for you, though this may be set to your desired password instead should this be preferred.
 
 ### Let's Encrypt
-
 ```
 use_letsencrypt: false
 ```
@@ -94,7 +89,6 @@ Whether a Let's Encrypt SSL should be generated.
 ___Note:___ This should only be used when you have a domain pointed to the target WordPress installation.
 
 ## Example Playbook
-
 ```yaml
 - hosts: wordpress_lamp
   roles:
@@ -105,9 +99,7 @@ ___Note:___ This should only be used when you have a domain pointed to the targe
 ```
 
 ## License
-
 GPLv3
 
 ## Author Information
-
 [InMotion Hosting](https://inmotionhosting.com)
