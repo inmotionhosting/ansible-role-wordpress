@@ -27,11 +27,3 @@ galaxy_info:
   galaxy_tags:
     - web
     - wordpress
-
-dependencies:
-  - src: inmotionhosting.apache
-    version: 1.2.0
-  - src: inmotionhosting.mysql
-    version: 1.2.0
-  - src: inmotionhosting.php_fpm
-    version: 1.2.0
