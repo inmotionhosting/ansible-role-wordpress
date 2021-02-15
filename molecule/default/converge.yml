@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   roles:
-    - role: ansible-role-apache
-    - role: ansible-role-mysql
-    - role: ansible-role-php_fpm
+    - role: inmotionhosting.apache
+    - role: inmotionhosting.mysql
+    - role: inmotionhosting.php_fpm
     - role: ansible-role-wordpress
