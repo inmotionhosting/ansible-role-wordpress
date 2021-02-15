@@ -20,13 +20,13 @@
         SetHandler proxy:fcgi://{{ system_user }}
     </FilesMatch>
 
-    DocumentRoot /home/{{ system_user }}/{{ wp_system_folder }}/
+    DocumentRoot {{ wp_system_path }}
     DirectoryIndex index.html index.php
 
     TraceEnable Off
 
     <Location "/fpm-status">
-        Order Allow,Deny 
+        Order Allow,Deny
         Allow from 127.0.0.1
         ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
     </Location>
@@ -35,7 +35,7 @@
         ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
     </Location>
 
-    <Directory /home/{{ system_user }}/{{ wp_system_folder }}/>
+    <Directory {{ wp_system_path }}/>
         Options FollowSymLinks
         AllowOverride All
         Require all granted
@@ -65,13 +65,13 @@
         SetHandler proxy:fcgi://{{ system_user }}
     </FilesMatch>
 
-    DocumentRoot /home/{{ system_user }}/{{ wp_system_folder }}
+    DocumentRoot {{ wp_system_path }}
     DirectoryIndex index.html index.php
 
     TraceEnable Off
 
     <Location "/fpm-status">
-        Order Allow,Deny 
+        Order Allow,Deny
         Allow from 127.0.0.1
         ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
     </Location>
@@ -80,7 +80,7 @@
         ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
     </Location>
 
-    <Directory /home/{{ system_user }}/{{ wp_system_folder }}>
+    <Directory {{ wp_system_path }}>
         Options FollowSymLinks
         AllowOverride All
         Require all granted
