@@ -137,5 +137,4 @@
 # SELinux only
 - name: Enable and configure SELinux
   include: selinux.yml
-  when: >-
-    or ansible_selinux.status == "enabled"
+  when: ansible_selinux.status == "enabled"
