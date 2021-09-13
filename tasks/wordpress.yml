@@ -46,7 +46,7 @@
     state: directory
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
-    mode: 0755
+    mode: "0755"
 
 - name: Download WordPress Core
   command: >-
@@ -81,6 +81,18 @@
     chdir: "{{ wp_system_path }}"
   become: true
   become_user: "{{ system_user }}"
+
+- name: Ensure "{{ wp_system_path }}/wp-*/" permissions are correct
+  ansible.builtin.file:
+    path: "{{ wp_system_path }}/{{ item.path }}/"
+    state: directory
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: "0755"
+  loop:
+    - path: wp-admin
+    - path: wp-content
+    - path: wp-includes
 
 #
 # Plugins
