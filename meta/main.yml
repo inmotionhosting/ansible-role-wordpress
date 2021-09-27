@@ -6,9 +6,6 @@ galaxy_info:
   company: "InMotion Hosting"
   license: GPLv3
   min_ansible_version: 2.9
-  collections:
-    - ansible.posix
-    - community.general
 
   platforms:
     - name: EL
@@ -17,13 +14,21 @@ galaxy_info:
         - 8
     - name: Debian
       versions:
-        - stretch
         - buster
+        - bullseye
     - name: Ubuntu
       versions:
         - bionic
         - focal
 
   galaxy_tags:
-    - web
     - wordpress
+    - lamp
+    - apache
+    - mysql
+    - php
+
+dependencies:
+  - inmotionhosting.apache
+  - inmotionhosting.mysql
+  - inmotionhosting.php_fpm

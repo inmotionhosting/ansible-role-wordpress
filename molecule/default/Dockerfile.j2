@@ -1,0 +1,32 @@
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+
+RUN if [ "$(command -v apt-get)" ]; then \
+        apt-get update && \
+        apt-get install -y --no-install-recommends openssh-client openssh-server python3 sudo systemd && \
+        apt-get autoremove -y && \
+        apt-get clean -y; \
+    elif [ "$(command -v dnf)" ]; then \
+        dnf install -y hostname openssh openssh-server python3 sudo systemd which && \
+        dnf autoremove -y && \
+        dnf clean all; \
+    elif [ "$(command -v yum)" ]; then \
+        yum install -y hostname openssh openssh-server python3 sudo systemd which && \
+        yum autoremove -y && \
+        yum clean all; \
+    fi
+
+RUN rm -rf /lib/systemd/system/{*getty*,systemd*udev*} && \
+    cp /bin/true /sbin/agetty && \
+    echo "Defaults !requiretty" >> /etc/sudoers
+
+VOLUME ["/sys/fs/cgroup"]
+
+{% if "centos" in item.image %}
+CMD ["/usr/lib/systemd/systemd"]
+{% else %}
+CMD ["/lib/systemd/systemd"]
+{% endif %}

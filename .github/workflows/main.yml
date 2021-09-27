@@ -2,28 +2,30 @@ name: Ansible Molecule Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+  workflow_dispatch:
+    branches: [master]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        molecule_distro:
-          - centos-7
-          - centos-8
-          - debian-9
-          - debian-10
-          - ubuntu-18.04
-          - ubuntu-20.04
+        molecule_image:
+          - "centos:7"
+          - "centos:8"
+          - "debian:10"
+          - "debian:11"
+          - "ubuntu:18.04"
+          - "ubuntu:20.04"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
       - run: pip install -r requirements.txt
       - run: molecule test
         env:
-          MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
+          MOLECULE_IMAGE: ${{ matrix.molecule_image }}
