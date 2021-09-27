@@ -125,13 +125,12 @@ wp_themes: []
 # Apache config based on presence of ultrastack
 use_ultrastack: false
 
-# Whether a letsencrypt SSL should be generated.
+# Whether an letsencrypt SSL should be generated.
 use_letsencrypt: false
 
 # Generate a random password.  Used to create a safe password for the
 # WordPress database user via 'wp_db_pass'.
 pass_gen_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
-
 
 #
 # PHP Config
