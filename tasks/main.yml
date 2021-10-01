@@ -27,7 +27,7 @@
 
 - name: Include Debian-family tasks
   include: Debian.yml
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family|lower == "debian"
 
 - name: Create httpd virtual host
   template:

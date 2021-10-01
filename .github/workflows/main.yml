@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        molecule_image:
+        image:
           - "centos:7"
           - "centos:8"
           - "debian:10"
@@ -28,4 +28,4 @@ jobs:
       - run: pip install -r requirements.txt
       - run: molecule test
         env:
-          MOLECULE_IMAGE: ${{ matrix.molecule_image }}
+          MOLECULE_IMAGE: ${{ matrix.image }}

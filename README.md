@@ -10,7 +10,7 @@ policies. Additionally we will focus on supporting the latest two stable
 releases of each, which at the time of writing are as follows:
 
 * CentOS 7, 8
-* Debian 9, 10
+* Debian 10, 11
 * Ubuntu 18.04, 20.04
 
 # Dependencies
@@ -26,7 +26,7 @@ releases of each, which at the time of writing are as follows:
 Available variables are listed below with their default values (you can also see `defaults/main.yml`)
 
 ### WordPress site installation options
-```
+```yaml
 site_domain: "{{ ansible_fqdn }}"
 site_email: "email@example.com"
 site_user: "example_username"
@@ -35,7 +35,7 @@ site_pass: "example_password"
 
 Settings for installing a WordPress site. It's highly encouraged to change the email, user and pass for security reasons. If you change the site domain, make sure to set it to something that is pointed to the server. By default it will use the hostname that Ansible pulls from the server.
 
-```
+```yaml
 wp_plugins:
   - block-bad-queries
   - boldgrid-backup
@@ -60,7 +60,7 @@ wp_system_folder: "doc_root"
 
 The folder that the WordPress installation will be installed to. This will be a folder within the system user's home folder.
 
-```
+```yaml
 max_request_workers: # Apache: The number of simultaneous connections allowed. Must be a multiple of 25.
 php_proc_mem: # PHP-FPM: Memory consumption per PHP worker.
 children_buffer # PHP-FPM: What percentage of the server's memory PHP can consume.
@@ -69,7 +69,7 @@ children_buffer # PHP-FPM: What percentage of the server's memory PHP can consum
 These are configuration settings for Apache and PHP.
 
 ### Database options
-```
+```yaml
 wp_db_name: "{{ system_user }}"
 wp_db_user: "{{ system_user }}"
 # wp_db_pass: 'not_secure'
@@ -80,7 +80,7 @@ These are database user/name for the WordPress installation.
 ___Note:___ By default the `wp_db_pass` is automatically generated for you, though this may be set to your desired password instead should this be preferred.
 
 ### Let's Encrypt
-```
+```yaml
 use_letsencrypt: false
 ```
 

@@ -4,17 +4,21 @@ FROM {{ item.registry.url }}/{{ item.image }}
 FROM {{ item.image }}
 {% endif %}
 
-RUN if [ "$(command -v apt-get)" ]; then \
-        apt-get update && \
-        apt-get install -y --no-install-recommends openssh-client openssh-server python3 sudo systemd && \
-        apt-get autoremove -y && \
-        apt-get clean -y; \
+RUN if [ "$(command -v apt)" ]; then \
+        apt update && \
+        apt install -y --no-install-recommends --no-install-suggests \
+            ca-certificates openssh-client openssh-server openssl python3 \
+            sudo systemd && \
+        apt autoremove -y && \
+        apt clean -y; \
     elif [ "$(command -v dnf)" ]; then \
-        dnf install -y hostname openssh openssh-server python3 sudo systemd which && \
+        dnf install -y ca-certificates hostname openssh openssh-server \
+            openssl python3 sudo systemd which && \
         dnf autoremove -y && \
         dnf clean all; \
     elif [ "$(command -v yum)" ]; then \
-        yum install -y hostname openssh openssh-server python3 sudo systemd which && \
+        yum install -y ca-certificates hostname openssh openssh-server \
+            openssl python3 sudo systemd which && \
         yum autoremove -y && \
         yum clean all; \
     fi

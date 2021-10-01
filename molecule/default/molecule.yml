@@ -21,6 +21,8 @@ provisioner:
       internal_poll_interval: "0.01"
       nocows: 1
       var_compression_level: 9
+    diff:
+      always: true
   log: true
 
 verifier:
