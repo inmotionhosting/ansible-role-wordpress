@@ -23,10 +23,10 @@ php_value[session.save_path] = /var/lib/php/session
 php_value[soap.wsdl_cache_dir] = /var/lib/php/wsdlcache
 
 pm = dynamic
-pm.max_children = {{ (ansible_memtotal_mb / php_proc_mem * children_buffer) | int }}
-pm.min_spare_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer) / 3) | int }}
-pm.max_spare_servers = {{ (ansible_memtotal_mb / php_proc_mem * children_buffer) | int }}
-pm.start_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer) / 3) | int }}
+pm.max_children = {{ (ansible_memtotal_mb / php_proc_mem * children_buffer|float) | int }}
+pm.min_spare_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer|float) / 3) | int }}
+pm.max_spare_servers = {{ (ansible_memtotal_mb / php_proc_mem * children_buffer|float) | int }}
+pm.start_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer|float) / 3) | int }}
 pm.max_requests = 200
 pm.process_idle_timeout = 10s
 pm.status_path = /fpm-status
