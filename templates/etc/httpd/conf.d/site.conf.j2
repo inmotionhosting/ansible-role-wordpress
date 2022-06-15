@@ -1,13 +1,21 @@
 # {{ template_destpath }}
 # {{ ansible_managed }}
 
+{% if use_ultrastack %}
+RemoteIPHeader X-Forwarded-For
+RemoteIPInternalProxy 127.0.0.0/8 ::1 {{ ansible_default_ipv4.address }}
+LogFormat "%v:%p %a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+{% else %}
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+{% endif %}
+
 {% if not use_letsencrypt %}
 <VirtualHost *:{{ apache_port_http }}>
     ServerName {{ site_domain }}
     ServerAlias www.{{ site_domain }}
 
     ErrorLog /var/log/{{ apache_name }}/{{ site_domain }}-error.log
-    CustomLog /var/log/{{ apache_name }}/{{ site_domain }}-access.log combined
+    CustomLog /var/log/{{ apache_name }}/{{ site_domain }}-access.log vhost_combined
 
 {% if use_letsencrypt and not use_ultrastack %}
     Redirect permanent / https://{{ site_domain }}/
@@ -50,7 +58,7 @@
     ServerAlias www.{{ site_domain }}
 
     ErrorLog /var/log/{{ apache_name }}/ssl-{{ site_domain }}-error.log
-    CustomLog /var/log/{{ apache_name }}/ssl-{{ site_domain }}-access.log combined
+    CustomLog /var/log/{{ apache_name }}/ssl-{{ site_domain }}-access.log vhost_combined
 
     SSLEngine On
     SSLCertificateFile /etc/letsencrypt/live/{{ site_domain }}/cert.pem
