@@ -14,7 +14,7 @@
 - name: Create the system user account
   user:
     name: "{{ system_user }}"
-    group: "{{ system_user }}"
+    groups: "{{ system_user }},nginx,nobody"
 
 - name: Ensure system user home has execute permissions
   file:
@@ -114,6 +114,15 @@
   with_items:
     - siteurl
     - home
+
+- name: Ensure NGINX Helper Cache Path is correct
+  command: >-
+    wp config set RT_WP_NGINX_HELPER_CACHE_PATH /var/nginx/cache/sitecache/
+  args:
+    chdir: "{{ wp_system_path }}"
+  become: true
+  become_user: "{{ system_user }}"
+  changed_when: false
 
 - name: Ensure content matches site protocol scheme
   command: >-
