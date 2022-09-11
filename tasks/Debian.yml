@@ -1,8 +1,8 @@
 ---
-- name: (Debian) Disable Apache mpm_event module
-  apache2_module:
+- name: (Debian) Enable Apache mpm_event module
+  community.general.apache2_module:
     name: "mpm_event"
-    state: absent
+    state: present
     ignore_configcheck: true
   failed_when:
     - result.rc is defined
@@ -10,7 +10,7 @@
   register: result
 
 - name: (Debian) Disable Apache PHP module
-  apache2_module:
+  community.general.apache2_module:
     name: "php{{ php_version }}"
     state: absent
     ignore_configcheck: true
@@ -20,7 +20,7 @@
   register: result
 
 - name: (Debian) Disable Apache mpm_prefork module
-  apache2_module:
+  community.general.apache2_module:
     name: "mpm_prefork"
     state: absent
     ignore_configcheck: true
@@ -29,10 +29,10 @@
     - result.rc > 0
   register: result
 
-- name: (Debian) Enable Apache mpm_worker module
-  apache2_module:
+- name: (Debian) Disable Apache mpm_worker module
+  community.general.apache2_module:
     name: "mpm_worker"
-    state: present
+    state: absent
     ignore_configcheck: true
   failed_when:
     - result.rc is defined
@@ -40,7 +40,7 @@
   register: result
 
 - name: (Debian) Enable Apache proxy_http module
-  apache2_module:
+  community.general.apache2_module:
     name: "proxy_http"
     state: present
     ignore_configcheck: true
