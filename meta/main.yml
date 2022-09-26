@@ -28,7 +28,4 @@ galaxy_info:
     - mysql
     - php
 
-dependencies:
-  - inmotionhosting.apache
-  - inmotionhosting.mysql
-  - inmotionhosting.php_fpm
+dependencies: []

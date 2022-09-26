@@ -1,10 +1,3 @@
 ---
 collections:
   - name: community.general
-roles:
-  - name: inmotionhosting.apache
-    version: 1.3.1
-  - name: inmotionhosting.mysql
-    version: 1.3.3
-  - name: inmotionhosting.php_fpm
-    version: 1.3.0
