@@ -15,9 +15,6 @@ releases of each, which at the time of writing are as follows:
 
 # Dependencies
 ```yaml
-- role: inmotionhosting.apache
-- role: inmotionhosting.mysql
-- role: inmotionhosting.php_fpm
 - collection: community.general
 - collection: ansible.posix
 ```
