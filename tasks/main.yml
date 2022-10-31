@@ -72,6 +72,21 @@
     - /etc/php-fpm.d/www.conf
   notify: restart php-fpm
 
+- name: Identify extra fpm pool configs
+  ansible.builtin.find:
+    paths: "{{ php_fpm_config_pool_path }}"
+    file_type: file
+    contains: '.*site\.conf\.j2.*'
+    excludes: "{{ site_domain }}.conf"
+  register: php_fpm_extra_pools
+
+- name: Remove extra site configs
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ php_fpm_extra_pools.files }}"
+  notify: restart php-fpm
+
 #
 # WordPress
 #
