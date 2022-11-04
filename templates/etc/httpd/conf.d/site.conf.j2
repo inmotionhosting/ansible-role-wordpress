@@ -2,7 +2,7 @@
 # {{ ansible_managed }}
 # tags: site.conf.j2
 
-{% if use_ultrastack %}
+{% if use_ultrastack|bool %}
 RemoteIPHeader X-Forwarded-For
 RemoteIPInternalProxy 127.0.0.0/8 ::1 {{ ansible_default_ipv4.address }}
 LogFormat "%v:%p %a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
