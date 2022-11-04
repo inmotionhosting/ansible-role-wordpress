@@ -124,7 +124,7 @@
     wp_protocol: >-
       {{ "https://"
       if use_letsencrypt is defined
-      and use_letsencrypt
+      and use_letsencrypt|bool
       else "http://" }}
 
 - name: Ensure WordPress siteurl and homeurl are correct
@@ -139,7 +139,7 @@
     wp_protocol: >-
       {{ "https://"
       if use_letsencrypt is defined
-      and use_letsencrypt
+      and use_letsencrypt|bool
       else "http://" }}
   with_items:
     - siteurl
@@ -160,12 +160,12 @@
 
     "{{ 'http://'
     if use_letsencrypt is defined
-    and use_letsencrypt
+    and use_letsencrypt|bool
     else 'https://' }}"
 
     "{{ 'https://'
     if use_letsencrypt is defined
-    and use_letsencrypt
+    and use_letsencrypt|bool
     else 'http://' }}"
   args:
     chdir: "{{ wp_system_path }}"
