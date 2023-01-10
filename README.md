@@ -28,6 +28,7 @@ site_domain: "{{ ansible_fqdn }}"
 site_email: "email@example.com"
 site_user: "example_username"
 site_pass: "example_password"
+install_wordpress: true
 ```
 
 Settings for installing a WordPress site. It's highly encouraged to change the email, user and pass for security reasons. If you change the site domain, make sure to set it to something that is pointed to the server. By default it will use the hostname that Ansible pulls from the server.

@@ -90,88 +90,90 @@
 #
 # WordPress
 #
+- name: Check for, Install, and Configure WordPress
+  block:
+  - name: Check for existing WordPress installation
+    stat:
+      path: "{{ wp_system_path }}/wp-config.php"
+    changed_when: not wordpress_installed.stat.exists
+    ignore_errors: true
+    register: wordpress_installed
 
-- name: Check for existing WordPress installation
-  stat:
-    path: "{{ wp_system_path }}/wp-config.php"
-  changed_when: not wordpress_installed.stat.exists
-  ignore_errors: true
-  register: wordpress_installed
+  - name: Install WordPress
+    include: wordpress.yml
+    when: wordpress_installed.changed
 
-- name: Install WordPress
-  include: wordpress.yml
-  when: wordpress_installed.changed
+  - name: Get WordPress Site Url
+    command: >-
+      wp option get siteurl
+    args:
+      chdir: "{{ wp_system_path }}"
+    become: true
+    become_user: "{{ system_user }}"
+    register: siteurl
+    changed_when: false
 
-- name: Get WordPress Site Url
-  command: >-
-    wp option get siteurl
-  args:
-    chdir: "{{ wp_system_path }}"
-  become: true
-  become_user: "{{ system_user }}"
-  register: siteurl
-  changed_when: false
+  - name: Replace all site urls in database if changed
+    command: >-
+      wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-columns=guid
+    args:
+      chdir: "{{ wp_system_path }}"
+    become: true
+    become_user: "{{ system_user }}"
+    when: siteurl.stdout is defined and siteurl.stdout != wp_protocol + site_domain
+    vars:
+      wp_protocol: >-
+        {{ "https://"
+        if use_letsencrypt is defined
+        and use_letsencrypt|bool
+        else "http://" }}
 
-- name: Replace all site urls in database if changed
-  command: >-
-    wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-columns=guid
-  args:
-    chdir: "{{ wp_system_path }}"
-  become: true
-  become_user: "{{ system_user }}"
-  when: siteurl.stdout is defined and siteurl.stdout != wp_protocol + site_domain
-  vars:
-    wp_protocol: >-
-      {{ "https://"
+  - name: Ensure WordPress siteurl and homeurl are correct
+    command: >-
+      wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}"
+    args:
+      chdir: "{{ wp_system_path }}"
+    become: true
+    become_user: "{{ system_user }}"
+    changed_when: false
+    vars:
+      wp_protocol: >-
+        {{ "https://"
+        if use_letsencrypt is defined
+        and use_letsencrypt|bool
+        else "http://" }}
+    with_items:
+      - siteurl
+      - home
+
+  - name: Ensure NGINX Helper Cache Path is correct
+    command: >-
+      wp config set RT_WP_NGINX_HELPER_CACHE_PATH /var/nginx/cache/sitecache/
+    args:
+      chdir: "{{ wp_system_path }}"
+    become: true
+    become_user: "{{ system_user }}"
+    changed_when: false
+
+  - name: Ensure content matches site protocol scheme
+    command: >-
+      wp search-replace
+
+      "{{ 'http://'
       if use_letsencrypt is defined
       and use_letsencrypt|bool
-      else "http://" }}
+      else 'https://' }}"
 
-- name: Ensure WordPress siteurl and homeurl are correct
-  command: >-
-    wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}"
-  args:
-    chdir: "{{ wp_system_path }}"
-  become: true
-  become_user: "{{ system_user }}"
-  changed_when: false
-  vars:
-    wp_protocol: >-
-      {{ "https://"
+      "{{ 'https://'
       if use_letsencrypt is defined
       and use_letsencrypt|bool
-      else "http://" }}
-  with_items:
-    - siteurl
-    - home
-
-- name: Ensure NGINX Helper Cache Path is correct
-  command: >-
-    wp config set RT_WP_NGINX_HELPER_CACHE_PATH /var/nginx/cache/sitecache/
-  args:
-    chdir: "{{ wp_system_path }}"
-  become: true
-  become_user: "{{ system_user }}"
-  changed_when: false
-
-- name: Ensure content matches site protocol scheme
-  command: >-
-    wp search-replace
-
-    "{{ 'http://'
-    if use_letsencrypt is defined
-    and use_letsencrypt|bool
-    else 'https://' }}"
-
-    "{{ 'https://'
-    if use_letsencrypt is defined
-    and use_letsencrypt|bool
-    else 'http://' }}"
-  args:
-    chdir: "{{ wp_system_path }}"
-  become: true
-  become_user: "{{ system_user }}"
-  changed_when: false
+      else 'http://' }}"
+    args:
+      chdir: "{{ wp_system_path }}"
+    become: true
+    become_user: "{{ system_user }}"
+    changed_when: false
+  when: install_wordpress | bool
 
 # SELinux only
 - name: Enable and configure SELinux
