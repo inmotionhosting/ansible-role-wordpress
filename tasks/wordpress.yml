@@ -39,6 +39,7 @@
 #
 # WordPress
 #
+
 - name: Ensure install directory exists
   file:
     path: "{{ wp_system_path }}"
