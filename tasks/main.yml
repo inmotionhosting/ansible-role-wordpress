@@ -21,14 +21,6 @@
     path: "/home/{{ system_user }}"
     mode: 0711
 
-- name: Ensure install directory exists
-  file:
-    path: "{{ wp_system_path }}"
-    state: directory
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: "0755"
-
 #
 # Apache
 #
