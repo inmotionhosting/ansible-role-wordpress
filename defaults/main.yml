@@ -133,7 +133,7 @@ use_letsencrypt: false
 pass_gen_alias: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
 
 # Allow installation of WordPress and related tasks to be deferred (for pre-warming)
-imstall_wordpress: true
+install_wordpress: true
 
 #
 # PHP Config
