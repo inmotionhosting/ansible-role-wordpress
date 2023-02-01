@@ -175,8 +175,3 @@
     become_user: "{{ system_user }}"
     changed_when: false
   when: install_wordpress | bool
-
-# SELinux only
-- name: Enable and configure SELinux
-  include: selinux.yml
-  when: ansible_selinux.status == "enabled"
