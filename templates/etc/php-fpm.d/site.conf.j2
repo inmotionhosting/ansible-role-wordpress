@@ -30,7 +30,7 @@ pm.max_spare_servers = {{ (ansible_memtotal_mb / php_proc_mem * children_buffer 
 pm.start_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer | float) / 3) | int }}
 pm.max_requests = 200
 pm.process_idle_timeout = 10s
-pm.status_path = /fpm-status
+pm.status_path = /status
 ping.path = /fpm-ping
 
 slowlog = {{ php_fpm_slowlog }}

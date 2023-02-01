@@ -34,10 +34,10 @@ LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" vhost_c
 
     TraceEnable Off
 
-    <Location "/fpm-status">
+    <Location "/status">
         Order Allow,Deny
         Allow from 127.0.0.1
-        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/status
     </Location>
 
     <Location "/fpm-ping">
@@ -79,10 +79,10 @@ LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" vhost_c
 
     TraceEnable Off
 
-    <Location "/fpm-status">
+    <Location "/status">
         Order Allow,Deny
         Allow from 127.0.0.1
-        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-status
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/status
     </Location>
 
     <Location "/fpm-ping">
