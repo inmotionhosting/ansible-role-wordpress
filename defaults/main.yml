@@ -143,3 +143,6 @@ install_wordpress: true
 php_proc_mem: 64
 # PHP memory allocation = server memory (MB) / php_proc_mem (MB) * children_buffer
 children_buffer: 0.75
+
+php_allow_url_fopen: off
+php_allow_url_include: off
