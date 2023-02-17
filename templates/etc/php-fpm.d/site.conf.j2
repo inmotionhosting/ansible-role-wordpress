@@ -2,9 +2,10 @@
 ; {{ ansible_managed }}
 ; tags: site.conf.j2
 
-[{{ system_user }}]
+[{{ site_domain | replace(".", "_")}}]
 user = {{ system_user }}
 group = {{ system_user }}
+chdir = /home/{{ system_user }}
 
 listen = {{ php_fpm_socket_path }}
 listen.allowed_clients = 127.0.0.1
@@ -12,9 +13,13 @@ listen.owner = {{ apache_user }}
 listen.group = {{ apache_group }}
 listen.mode = 0660
 
-php_admin_flag[allow_url_fopen] = {{ php_allow_url_fopen }}
-php_admin_flag[allow_url_include] = {{ php_allow_url_include }}
+catch_workers_output = {{ 'yes' if php_catch_workers_output | bool else 'no' }}
+
+php_admin_flag[allow_url_fopen] = {{ 'on' if php_allow_url_fopen | bool else 'off' }}
+php_admin_flag[allow_url_include] = {{ 'on' if php_allow_url_include | bool else 'off' }}
 php_admin_flag[log_errors] = on
+
+php_admin_value[doc_root] = "{{ wp_system_path }}"
 
 php_admin_value[disable_functions] = exec,passthru,shell_exec,system
 php_admin_value[error_log] = {{ php_fpm_site_errorlog }}
@@ -32,6 +37,9 @@ pm.start_servers = {{ ((ansible_memtotal_mb / php_proc_mem * children_buffer | f
 pm.max_requests = 200
 pm.process_idle_timeout = 10s
 pm.status_path = /status
-ping.path = /fpm-ping
+ping.path = /ping
 
+security.limit_extensions = .phtml .php .php3 .php4 .php5 .php6 .php7 .php8
+
+request_slowlog_timeout = {{ php_request_slowlog_timeout }}
 slowlog = {{ php_fpm_slowlog }}
