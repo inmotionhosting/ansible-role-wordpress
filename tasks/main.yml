@@ -10,6 +10,12 @@
   group:
     name: "{{ system_user }}"
     state: present
+    
+- name: Create the nginx group
+  group:
+    name: "nginx"
+    state: present
+
 
 - name: Create the system user account
   user:
