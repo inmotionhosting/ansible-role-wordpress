@@ -28,4 +28,7 @@ galaxy_info:
     - mysql
     - php
 
-dependencies: []
+dependencies:
+  - role: inmotionhosting.apache
+  - role: inmotionhosting.mysql
+  - role: inmotionhosting.php_fpm
