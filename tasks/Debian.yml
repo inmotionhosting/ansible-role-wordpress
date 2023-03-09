@@ -9,15 +9,15 @@
     - result.rc > 0
   register: result
 
-- name: (Debian) Disable Apache PHP module
-  community.general.apache2_module:
-    name: "php{{ php_version }}"
-    state: absent
-    ignore_configcheck: true
-  failed_when:
-    - result.rc is defined
-    - result.rc > 0
-  register: result
+#- name: (Debian) Disable Apache PHP module
+#  community.general.apache2_module:
+#    name: "php{{ php_version }}"
+#    state: absent
+#    ignore_configcheck: true
+#  failed_when:
+#    - result.rc is defined
+#    - result.rc > 0
+#  register: result
 
 - name: (Debian) Disable Apache mpm_prefork module
   community.general.apache2_module:
