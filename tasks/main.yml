@@ -26,6 +26,8 @@
   file:
     path: "/home/{{ system_user }}/logs"
     mode: 0755
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
     state: directory
 
 #
