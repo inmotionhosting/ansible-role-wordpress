@@ -95,6 +95,17 @@
     - path: wp-content
     - path: wp-includes
 
+- name: Block XML-RPC requests in .htaccess
+  blockinfile:
+    path: "{{ wp_system_path }}/.htaccess"
+    create: true
+    marker: "# {mark} Block XML-RPC"
+    block: |
+      <Files xmlrpc.php>
+      Order Allow,Deny
+      Deny from all
+      </Files>
+
 #
 # Plugins
 #
