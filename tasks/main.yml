@@ -59,6 +59,12 @@
   with_items: "{{ apache_extra_sites.files }}"
   notify: restart apache
 
+- name: Reload apache
+  debug:
+    msg: "trigger apache restart"
+  changed_when: true
+  notify: restart apache
+
 #
 # PHP
 #
@@ -94,6 +100,12 @@
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ php_fpm_extra_pools.files }}"
+  notify: restart php-fpm
+
+- name: Reload php-fpm
+  debug:
+    msg: "trigger php-fpm restart"
+  changed_when: true
   notify: restart php-fpm
 
 #
