@@ -60,6 +60,8 @@
   notify: restart apache
 
 - name: Reload apache
+  debug:
+    msg: "trigger apache restart"
   changed_when: true
   notify: restart apache
 
@@ -101,6 +103,8 @@
   notify: restart php-fpm
 
 - name: Reload php-fpm
+  debug:
+    msg: "trigger php-fpm restart"
   changed_when: true
   notify: restart php-fpm
 
