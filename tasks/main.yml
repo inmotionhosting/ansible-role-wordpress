@@ -49,7 +49,7 @@
     paths: "{{ apache_config_site_path }}"
     file_type: file
     contains: '.*site\.conf\.j2.*'
-    excludes: "{{ site_domain }}.conf"
+    excludes: "{{ preserve_site_config_patterns }}"
   register: apache_extra_sites
 
 - name: Remove extra site configs
