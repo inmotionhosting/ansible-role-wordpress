@@ -122,8 +122,8 @@
       ;memory_limit = 128M
       ;post_max_size = 8M
       ;upload_max_filesize = 2M
-    owner: wordpress
-    group: wordpress
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
     mode: '0644'
   when: not php_ini_result.stat.exists      
 
