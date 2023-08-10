@@ -102,6 +102,32 @@
   with_items: "{{ php_fpm_extra_pools.files }}"
   notify: restart php-fpm
 
+- name: Check if local php.ini exists
+  ansible.builtin.stat:
+    path: "{{ wp_system_path }}/php.ini"
+  register: php_ini_result
+
+- name: Create local php.ini
+  ansible.builtin.copy:
+    dest: "{{ wp_system_path }}/php.ini"
+    content: |
+      [PHP]
+      ;display_errors = Off
+      ;display_startup_errors = Off
+      ;error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
+      ;log_errors = On
+      ;max_execution_time = 30
+      ;max_input_time = 60
+      ;max_input_vars = 1000
+      ;memory_limit = 128M
+      ;post_max_size = 8M
+      ;upload_max_filesize = 2M
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: '0644'
+  when: not php_ini_result.stat.exists      
+
+
 - name: Reload php-fpm
   debug:
     msg: "trigger php-fpm restart"
