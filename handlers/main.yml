@@ -1,15 +1,20 @@
 ---
-- name: restart apache
-  service:
+- name: Restart apache
+  ansible.builtin.service:
     name: "{{ apache_daemon }}"
     state: restarted
 
-- name: restart mysql
-  service:
+- name: Restart mysql
+  ansible.builtin.service:
     name: "{{ mysql_daemon }}"
     state: restarted
 
-- name: restart php-fpm
-  service:
+- name: Restart php-fpm
+  ansible.builtin.service:
     name: "{{ php_fpm_daemon }}"
+    state: restarted
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
     state: restarted

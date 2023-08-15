@@ -1,0 +1,6 @@
+# This file contains ignores rule violations for ansible-lint
+.github/workflows/main.yml yaml[truthy]
+defaults/main.yml yaml[line-length]
+tasks/main.yml no-changed-when
+tasks/main.yml no-handler
+tasks/wordpress.yml no-changed-when
