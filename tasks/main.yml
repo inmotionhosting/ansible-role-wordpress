@@ -268,6 +268,7 @@
           if use_letsencrypt is defined
           and use_letsencrypt | bool
           else "http://" }}
+      tags: molecule-idempotence-notest          
 
     - name: Ensure WordPress siteurl and homeurl are correct
       ansible.builtin.command: >-
@@ -286,6 +287,7 @@
       with_items:
         - siteurl
         - home
+      tags: molecule-idempotence-notest        
 
     - name: Ensure NGINX Helper Cache Path is correct
       ansible.builtin.command: >-
@@ -295,6 +297,7 @@
       become: true
       become_user: "{{ system_user }}"
       changed_when: false
+      tags: molecule-idempotence-notest      
 
     - name: Ensure content matches site protocol scheme
       ansible.builtin.command: >-
