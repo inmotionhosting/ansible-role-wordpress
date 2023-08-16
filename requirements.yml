@@ -9,4 +9,5 @@ collections:
     type: git
   - name: https://github.com/ansible-collections/community.docker
     type: git
-  - ansible.posix
+  - name: https://github.com/ansible-collections/ansible.posix
+    type: git
