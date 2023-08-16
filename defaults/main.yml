@@ -186,7 +186,13 @@ nginx_cache_purge_enable: false
 #
 # Nginx Cache Profile
 #
-nginx_cache_profile: no_caching
+nginx_accel_static_content: false
+nginx_cache_convert_head: true
+nginx_cache_honor_cc: false
+nginx_cache_honor_cookies: true
+nginx_cache_honor_expires: false
+nginx_cache_time_default: 0
+nginx_proxy_cache_enable: false
 
 # site config conf files matching these patterns will not be removed from /etc/nginx/conf.d/
 preserve_site_config_patterns:
