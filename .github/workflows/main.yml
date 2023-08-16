@@ -28,8 +28,8 @@ jobs:
           - image: geerlingguy/docker-rockylinux8-ansible:latest
           - image: geerlingguy/docker-rockylinux9-ansible:latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
@@ -52,8 +52,8 @@ jobs:
           - image: geerlingguy/docker-centos7-ansible:latest
             command: /usr/lib/systemd/systemd
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
