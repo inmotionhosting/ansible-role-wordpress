@@ -10,5 +10,7 @@ collections:
     type: git
   - name: https://github.com/ansible-collections/community.docker
     type: git
+  - name: https://github.com/ansible-collections/community.mysql
+    type: git
   - name: https://github.com/ansible-collections/ansible.posix
     type: git
