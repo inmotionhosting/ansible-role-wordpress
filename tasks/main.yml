@@ -152,6 +152,7 @@
   ansible.builtin.include_vars:
     file: vars/nginx_cache_profiles/{{ nginx_cache_profile }}.yml
   tags: profile
+  when: nginx_cache_profile is defined
 
 - name: Configure upstream server groups
   ansible.builtin.template:
