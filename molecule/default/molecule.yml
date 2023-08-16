@@ -10,7 +10,7 @@ driver:
 platforms:
   - name: "molecule-ansible-role-wordpress"
     image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    command: ${MOLECULE_COMMAND:-/usr/sbin/init}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
