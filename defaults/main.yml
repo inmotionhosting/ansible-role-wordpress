@@ -38,6 +38,7 @@ wp_plugins:
   - boldgrid-backup
   - health-check
   - heartbeat-control
+  - nginx-helper
   - w3-total-cache
 
 # W3 Total Cache settings to configure
@@ -180,7 +181,9 @@ nginx_ratelimit_paths: ".*login\\.php|xmlrpc\\.php|wp-cron\\.php"
 #
 # Nginx Cache Configs
 #
-nginx_cache_bypass_paths: "^(_logged_in_|items_in_cart|jsid|.*/wp-admin|.*/administrator|/admin|/user|/opcache\\.php|.*/phpinfo\\.php|/basket.*|/cart.*|/my-account.*|/checkout.*|/addons.*)"
+nginx_cache_bypass_paths: >
+  "^(_logged_in_|items_in_cart|jsid|.*/wp-admin|.*/administrator|/admin|
+  /user|/opcache\\.php|.*/phpinfo\\.php|/basket.*|/cart.*|/my-account.*|/checkout.*|/addons.*)"
 nginx_cache_purge_enable: false
 
 #

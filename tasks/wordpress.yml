@@ -74,6 +74,7 @@
     chdir: "{{ wp_system_path }}"
   become: true
   become_user: "{{ system_user }}"
+  changed_when: false
 
 - name: Ensure permissions are correct for "{{ "{}/wp-*/".format(wp_system_path) }}"
   ansible.builtin.file:
@@ -140,6 +141,7 @@
     - wp_plugins | length > 0
     - ("w3-total-cache" in wp_plugins)
   with_items: "{{ wp_w3tc_settings }}"
+  changed_when: false
 
 #
 # Themes
