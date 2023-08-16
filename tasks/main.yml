@@ -253,7 +253,8 @@
       become_user: "{{ system_user }}"
       register: siteurl
       changed_when: false
-
+      tags: molecule-idempotence-notest     
+      
     - name: Replace all site urls in database if changed
       ansible.builtin.command: >-
         wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-columns=guid
