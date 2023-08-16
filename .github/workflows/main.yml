@@ -38,7 +38,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install test dependencies
-        run: pip3 install ansible molecule
+        run: pip3 install ansible molecule==5.1.0 molecule-docker
 
       - name: Run Molecule Test
         run: molecule test
@@ -62,7 +62,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install test dependencies
-        run: pip3 install ansible molecule
+        run: pip3 install ansible molecule==5.1.0 molecule-docker
 
       - name: Run Molecule Test
         run: molecule test
