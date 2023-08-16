@@ -5,5 +5,6 @@ roles:
   - name: inmotionhosting.php_fpm
   - name: inmotionhosting.nginx_proxy
 collections:
+  - name: community.docker
   - name: community.general
   - name: ansible.posix

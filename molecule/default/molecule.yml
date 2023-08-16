@@ -6,7 +6,7 @@ driver:
   name: docker
 
 platforms:
-  - name: "molecule-ansible-role-monit"
+  - name: "molecule-ansible-role-wordpress"
     image: ${MOLECULE_IMAGE:-geerlingguy/docker-ubuntu2204-ansible:latest}
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
