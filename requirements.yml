@@ -5,6 +5,8 @@ roles:
   - name: inmotionhosting.php_fpm
   - name: inmotionhosting.nginx_proxy
 collections:
-  - community.docker
-  - community.general
+  - name: https://github.com/ansible-collections/community.general
+    type: git
+  - name: https://github.com/ansible-collections/community.docker
+    type: git
   - ansible.posix
