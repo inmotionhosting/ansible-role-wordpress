@@ -4,6 +4,7 @@ roles:
   - name: inmotionhosting.mysql
   - name: inmotionhosting.php_fpm
   - name: inmotionhosting.nginx_proxy
+  - name: inmotionhosting.redis
 collections:
   - name: https://github.com/ansible-collections/community.general
     type: git
