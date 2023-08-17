@@ -1,0 +1,110 @@
+# {{ template_destpath }}
+# {{ ansible_managed }}
+# tags: site.conf.j2
+
+
+server {
+    listen 80;
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+    listen 443 ssl http2;
+    ssl_certificate     /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
+{% endif %}
+
+    server_name {{ site_domain }} www.{{ site_domain }};
+
+    root {{ wp_system_path }};
+    
+    if ($http_cookie ~ "(_logged_in_|items_in_cart|jsid)") {
+        set $cache_bypass 1;
+    }
+
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+    if ($scheme != "https") {
+        return 301 https://$host$request_uri;
+    }
+{% endif %}
+
+    location / {
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;        
+{% if not nginx_proxy_cache_enable %}
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+{% else %}
+        proxy_no_cache $cache_bypass;
+        proxy_cache_bypass $cache_bypass;
+{% endif %}
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+        proxy_pass https://http_backend;
+{% else %}
+        proxy_pass http://http_backend;
+{% endif %}
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+
+{% if nginx_accel_static_content %}
+    location ~* \.(ico|jpe?g|gif|png|bmp|svg|tiff|exe|dmg|zip|rar|7z|docx?|xlsx?|js|css|less|sass|scss|ttf|woff2?|mp3|mp4|mkv|avi|mov|mpe?g|aac|wav|flac)$ {
+        expires 7d;
+        add_header Cache-Control "public, must-revalidate";
+        add_header X-Proxy-Cache "STATIC/TYPE";
+    }
+{% endif %}
+
+{% if nginx_ratelimit_enable %}
+    location ~ {{ nginx_ratelimit_paths }} {
+        limit_req_status 429;
+        limit_req zone={{ nginx_ratelimit_zone }} burst={{ nginx_ratelimit_burst }}{% if nginx_ratelimit_nodelay %} nodelay{% endif %};
+
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;        
+
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+        proxy_pass https://http_backend;
+{% else %}
+        proxy_pass http://http_backend;
+{% endif %}
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+{% endif %}
+
+    location ~ {{ nginx_cache_bypass_paths }} {
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        add_header X-Proxy-Cache $upstream_cache_status;
+        
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;        
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+        proxy_pass https://http_backend;
+{% else %}
+        proxy_pass http://http_backend;
+{% endif %}
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+
+{% if nginx_cache_purge_enable %}
+    location ~ ^/purge(/.*) {
+        allow 127.0.0.1;
+        allow {{ ansible_default_ipv4.address }};
+        deny all;
+        proxy_cache_purge sitecache "$scheme$request_method$host$1";
+    }
+{% endif %}
+
+}

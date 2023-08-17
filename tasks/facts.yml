@@ -1,6 +1,6 @@
 ---
 - name: Set lists of required variables
-  set_fact:
+  ansible.builtin.set_fact:
     wp_required_strings:
       - system_user
       - pass_gen_alias
@@ -17,7 +17,7 @@
       - php_proc_mem
 
 - name: Check required WordPress variables (strings)
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable for '{{ item }}': {{ lookup('vars', item) }}
 
@@ -29,7 +29,7 @@
   with_items: "{{ wp_required_strings }}"
 
 - name: Check required WordPress variables (integers)
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable for '{{ item }}': {{ lookup('vars', item) }}
 
@@ -41,7 +41,7 @@
   with_items: "{{ wp_required_ints }}"
 
 - name: Check required WordPress variables (children_buffer)
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable for '{{ children_buffer }}': {{ children_buffer }}
 
