@@ -6,6 +6,7 @@ roles:
   - name: inmotionhosting.nginx_proxy
   - name: inmotionhosting.redis
 collections:
+  - name: community.docker
   - name: community.general
   - name: community.mysql
   - name: ansible.posix
