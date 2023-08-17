@@ -1,12 +1,12 @@
 ---
 - name: Check if wp-cli is installed
-  stat:
+  ansible.builtin.stat:
     path: /usr/bin/wp
   changed_when: false
   register: wpcli_installed
 
 - name: Install wp-cli if missing
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ wp_cli_source }}"
     dest: /usr/bin/wp
     mode: a+x
@@ -17,19 +17,19 @@
 #
 
 - name: Set random MySQL password when not defined
-  set_fact:
+  ansible.builtin.set_fact:
     wp_db_pass: "{{ pass_gen_alias }}"
   when: wp_db_pass is undefined
 
 - name: Create WordPress database
-  mysql_db:
+  community.mysql.mysql_db:
     login_unix_socket: "{{ mysql_socket_path }}"
     name: "{{ wp_db_name }}"
     state: present
   register: wp_db_setup
 
 - name: Create DB user
-  mysql_user:
+  community.mysql.mysql_user:
     login_unix_socket: "{{ mysql_socket_path }}"
     name: "{{ wp_db_user }}"
     password: "{{ wp_db_pass }}"
@@ -40,16 +40,8 @@
 # WordPress
 #
 
-- name: Ensure install directory exists
-  file:
-    path: "{{ wp_system_path }}"
-    state: directory
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: "0755"
-
 - name: Download WordPress Core
-  command: >-
+  ansible.builtin.command: >-
     wp core download
   args:
     chdir: "{{ wp_system_path }}"
@@ -58,7 +50,7 @@
   become_user: "{{ system_user }}"
 
 - name: Create wp-config.php
-  command: >-
+  ansible.builtin.command: >-
     wp config create
     --dbname="{{ wp_db_name }}"
     --dbuser="{{ wp_db_user }}"
@@ -70,7 +62,7 @@
   become_user: "{{ system_user }}"
 
 - name: Install WordPress core
-  command: >-
+  ansible.builtin.command: >-
     wp core install
     --url="{{ site_domain }}"
     --title="{{ site_domain }}"
@@ -82,8 +74,9 @@
     chdir: "{{ wp_system_path }}"
   become: true
   become_user: "{{ system_user }}"
+  changed_when: false
 
-- name: Ensure "{{ wp_system_path }}/wp-*/" permissions are correct
+- name: Ensure permissions are correct for "{{ "{}/wp-*/".format(wp_system_path) }}"
   ansible.builtin.file:
     path: "{{ wp_system_path }}/{{ item.path }}/"
     state: directory
@@ -96,8 +89,11 @@
     - path: wp-includes
 
 - name: Block XML-RPC requests in .htaccess
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ wp_system_path }}/.htaccess"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: "0644"
     create: true
     marker: "# {mark} Block XML-RPC"
     block: |
@@ -111,7 +107,7 @@
 #
 
 - name: Install plugins
-  command: >-
+  ansible.builtin.command: >-
     wp plugin install {{ item }} --activate
   args:
     chdir: "{{ wp_system_path }}"
@@ -124,7 +120,7 @@
   with_items: "{{ wp_plugins }}"
 
 - name: Uninstall default plugins
-  command: >-
+  ansible.builtin.command: >-
     wp plugin uninstall hello
   args:
     chdir: "{{ wp_system_path }}"
@@ -133,7 +129,7 @@
   become_user: "{{ system_user }}"
 
 - name: Configure W3 Total Cache
-  command: >-
+  ansible.builtin.command: >-
     wp w3-total-cache option set
     {{ item.setting }} {{ item.value }} --type={{ item.type }}
   args:
@@ -145,13 +141,14 @@
     - wp_plugins | length > 0
     - ("w3-total-cache" in wp_plugins)
   with_items: "{{ wp_w3tc_settings }}"
+  changed_when: false
 
 #
 # Themes
 #
 
 - name: Install themes
-  command: >-
+  ansible.builtin.command: >-
     wp theme install {{ item }} --activate
   args:
     chdir: "{{ wp_system_path }}"
