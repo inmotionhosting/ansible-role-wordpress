@@ -1,0 +1,18 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: Update apt cache (on Debian).
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Install iproute package
+      ansible.builtin.package:
+        name: "{{ 'iproute' if ansible_os_family == 'RedHat' else 'iproute2' }}"
+        state: present
+
+  roles:
+    - role: ansible-role-wordpress
