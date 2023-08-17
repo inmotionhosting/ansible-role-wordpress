@@ -1,5 +1,4 @@
 # requirements.txt
 
-ansible==4.5.0
-molecule==3.4.0
-molecule-docker==1.0.2
+ansible-lint
+pre-commit

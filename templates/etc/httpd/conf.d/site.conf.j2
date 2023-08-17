@@ -5,7 +5,7 @@
 {% if use_ultrastack | bool %}
 <IfModule remoteip_module>
     RemoteIPHeader X-Forwarded-For
-    RemoteIPInternalProxy 127.0.0.0/8 ::1 {{ (ansible_default_ipv4 | default({})).address | default('') }}
+    RemoteIPInternalProxy 127.0.0.0/8 ::1 {{ ansible_default_ipv4.address }}
     LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
 </IfModule>
 {% endif %}

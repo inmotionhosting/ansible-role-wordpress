@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-wordpress.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-wordpress) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-wordpress.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-wordpress/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-wordpress.svg)](https://github.com/inmotionhosting/ansible-role-wordpress/stargazers)
+![Ansible Molecule Pipeline](https://github.com/inmotionhosting/ansible-role-wordpress/actions/workflows/main.yml/badge.svg) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-wordpress.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-wordpress/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-wordpress.svg)](https://github.com/inmotionhosting/ansible-role-wordpress/stargazers)
 
 # Ansible Role: WordPress
 Modular Ansible Role for deploying and configuring WordPress.
@@ -9,13 +9,16 @@ server-focused Linux distributions and aims to follow their deprecation
 policies. Additionally we will focus on supporting the latest two stable
 releases of each, which at the time of writing are as follows:
 
-* CentOS 7, 8
-* Debian 10, 11
-* Ubuntu 18.04, 20.04, 22.04
+* CentOS 7.x or later
+* Debian 10 or later
+* Ubuntu 20.04 LTS or later
+* AlmaLinux 8.x or later
+* RockyLinux 8.x or later
 
 # Dependencies
 ```yaml
 - collection: community.general
+- collection: community.mysql
 - collection: ansible.posix
 ```
 
@@ -39,6 +42,7 @@ wp_plugins:
   - boldgrid-backup
   - health-check
   - heartbeat-control
+  - nginx-helper
   - w3-total-cache
 ```
 
@@ -61,7 +65,7 @@ The folder that the WordPress installation will be installed to. This will be a 
 ```yaml
 max_request_workers: # Apache: The number of simultaneous connections allowed. Must be a multiple of 25.
 php_proc_mem: # PHP-FPM: Memory consumption per PHP worker.
-children_buffer # PHP-FPM: What percentage of the server's memory PHP can consume.
+children_buffer: # PHP-FPM: What percentage of the server's memory PHP can consume.
 ```
 
 These are configuration settings for Apache and PHP.
@@ -88,11 +92,8 @@ ___Note:___ This should only be used when you have a domain pointed to the targe
 
 ## Example Playbook
 ```yaml
-- hosts: wordpress_lamp
+- hosts: wordpress
   roles:
-    - role: inmotionhosting.apache
-    - role: inmotionhosting.mysql
-    - role: inmotionhosting.php_fpm
     - role: inmotionhosting.wordpress
 ```
 

@@ -38,6 +38,7 @@ wp_plugins:
   - boldgrid-backup
   - health-check
   - heartbeat-control
+  - nginx-helper
   - w3-total-cache
 
 # W3 Total Cache settings to configure
@@ -123,10 +124,13 @@ wp_themes: []
 #
 
 # Apache config based on presence of ultrastack
-use_ultrastack: false
+use_ultrastack: true
 
 # Whether an letsencrypt SSL should be generated.
 use_letsencrypt: false
+
+# Whether redis should be used
+use_redis: true
 
 # Generate a random password.  Used to create a safe password for the
 # WordPress database user via 'wp_db_pass'.
@@ -148,6 +152,50 @@ php_allow_url_fopen: 'on'
 php_allow_url_include: 'off'
 php_catch_workers_output: 'yes'
 php_request_slowlog_timeout: 0
+
+ultrastack_w3tc_settings:
+  - setting: dbcache.engine
+    type: string
+    value: redis
+  - setting: dbcache.redis.servers
+    type: array
+    value: "127.0.0.1:6379"
+  - setting: objectcache.engine
+    type: string
+    value: redis
+  - setting: objectcache.redis.servers
+    type: array
+    value: "127.0.0.1:6379"
+
+#
+# Nginx Rate Limiting
+#
+
+nginx_ratelimit_enable: true
+nginx_ratelimit: 1
+nginx_ratelimit_burst: 10
+nginx_ratelimit_nodelay: true
+nginx_ratelimit_zone: "default_rlzone"
+nginx_ratelimit_paths: ".*login\\.php|xmlrpc\\.php|wp-cron\\.php"
+
+#
+# Nginx Cache Configs
+#
+nginx_cache_bypass_paths: >
+  "^(_logged_in_|items_in_cart|jsid|.*/wp-admin|.*/administrator|/admin|
+  /user|/opcache\\.php|.*/phpinfo\\.php|/basket.*|/cart.*|/my-account.*|/checkout.*|/addons.*)"
+nginx_cache_purge_enable: false
+
+#
+# Nginx Cache Profile
+#
+nginx_accel_static_content: false
+nginx_cache_convert_head: true
+nginx_cache_honor_cc: false
+nginx_cache_honor_cookies: true
+nginx_cache_honor_expires: false
+nginx_cache_time_default: 0
+nginx_proxy_cache_enable: false
 
 # site config conf files matching these patterns will not be removed from /etc/nginx/conf.d/
 preserve_site_config_patterns:

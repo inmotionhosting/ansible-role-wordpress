@@ -9,10 +9,5 @@
         cache_valid_time: 3600
       when: ansible_os_family == 'Debian'
 
-    - name: Install iproute package
-      ansible.builtin.package:
-        name: "{{ 'iproute' if ansible_os_family == 'RedHat' else 'iproute2' }}"
-        state: present
-
   roles:
     - role: ansible-role-wordpress

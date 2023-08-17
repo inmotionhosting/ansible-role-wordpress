@@ -290,29 +290,3 @@
       when: nginx_helper_cache_path.stdout != nginx_cache_path
       vars:
         nginx_cache_path: "{{ nginx_cache_dir }}/{{ nginx_cache_name }}"
-
-    - name: Ensure content matches site protocol scheme
-      ansible.builtin.command: >-
-        wp search-replace
-
-        "{{ 'http://'
-        if use_letsencrypt is defined
-        and use_letsencrypt | bool
-        else 'https://' }}"
-
-        "{{ 'https://'
-        if use_letsencrypt is defined
-        and use_letsencrypt | bool
-        else 'http://' }}"
-      args:
-        chdir: "{{ wp_system_path }}"
-      become: true
-      become_user: "{{ system_user }}"
-      changed_when: false
-      when: siteurl.stdout is defined and siteurl.stdout != wp_protocol + site_domain
-      vars:
-        wp_protocol: >-
-          {{ "https://"
-          if use_letsencrypt is defined
-          and use_letsencrypt | bool
-          else "http://" }}
