@@ -60,7 +60,7 @@
     paths: "{{ apache_config_site_path }}"
     file_type: file
     contains: '.*site\.conf\.j2.*'
-    excludes: "{{ preserve_site_config_patterns }}"
+    excludes: "{{ site_domain }}.conf"
   register: apache_extra_sites
 
 - name: Remove extra site configs
@@ -178,7 +178,7 @@
     paths: /etc/nginx/conf.d
     file_type: file
     contains: '.*site\.conf\.j2.*'
-    excludes: "{{ preserve_site_config_patterns }}"
+    excludes: "{{ site_domain }}.conf"
   register: nginx_extra_sites
 
 - name: Remove extra site configs

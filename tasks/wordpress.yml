@@ -9,7 +9,7 @@
   ansible.builtin.get_url:
     url: "{{ wp_cli_source }}"
     dest: /usr/bin/wp
-    mode: a+x
+    mode: "0755"
   when: not wpcli_installed.stat.exists
 
 #

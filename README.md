@@ -3,13 +3,13 @@
 # Ansible Role: WordPress
 Modular Ansible Role for deploying and configuring WordPress.
 
-# Requirements
+## Requirements
 This Ansible role supports the two latest stable releases of specific
 server-focused Linux distributions and aims to follow their deprecation
 policies. Additionally we will focus on supporting the latest two stable
 releases of each, which at the time of writing are as follows:
 
-* CentOS 7.x or later
+* CentOS 7.x
 * Debian 10 or later
 * Ubuntu 20.04 LTS or later
 * AlmaLinux 8.x or later

@@ -1,4 +1,7 @@
 # requirements.txt
 
 ansible-lint
+ansible>=6,<7
+molecule-plugins[docker]
+molecule>=5,<6
 pre-commit

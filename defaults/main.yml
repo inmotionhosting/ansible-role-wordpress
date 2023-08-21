@@ -144,7 +144,7 @@ install_wordpress: true
 #
 
 # Expected memory usage per PHP pool in MB
-php_proc_mem: 192
+php_proc_mem: 96
 # PHP memory allocation = server memory (MB) / php_proc_mem (MB) * children_buffer
 children_buffer: 0.75
 
@@ -181,7 +181,7 @@ nginx_ratelimit_paths: ".*login\\.php|xmlrpc\\.php|wp-cron\\.php"
 #
 # Nginx Cache Configs
 #
-nginx_cache_bypass_paths: >
+nginx_cache_bypass_paths: >-
   "^(_logged_in_|items_in_cart|jsid|.*/wp-admin|.*/administrator|/admin|
   /user|/opcache\\.php|.*/phpinfo\\.php|/basket.*|/cart.*|/my-account.*|/checkout.*|/addons.*)"
 nginx_cache_purge_enable: false
@@ -196,7 +196,3 @@ nginx_cache_honor_cookies: true
 nginx_cache_honor_expires: false
 nginx_cache_time_default: 0
 nginx_proxy_cache_enable: false
-
-# site config conf files matching these patterns will not be removed from /etc/nginx/conf.d/
-preserve_site_config_patterns:
-  - "{{ site_domain }}.conf"
