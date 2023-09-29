@@ -7,9 +7,9 @@ roles:
   - name: inmotionhosting.php_fpm
     version: 2.1.0
   - name: inmotionhosting.nginx_proxy
-    version: 2.1.0
+    version: 2.4.2
   - name: inmotionhosting.redis
-    version: 2.1.0
+    version: 2.2.0
 collections:
   - name: community.general
   - name: community.mysql

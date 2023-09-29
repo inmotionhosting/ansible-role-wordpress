@@ -209,6 +209,15 @@
     - use_redis is defined
     - use_redis
 
+- name: Add redis group to system_user ({{ system_user }})
+  ansible.builtin.user:
+    name: "{{ system_user }}"
+    groups: redis
+    append: true
+  when:
+    - use_redis is defined
+    - use_redis
+
 #
 # WordPress
 #
