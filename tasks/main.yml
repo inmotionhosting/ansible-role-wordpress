@@ -15,7 +15,7 @@
   ansible.builtin.user:
     name: "{{ system_user }}"
     group: "{{ system_user }}"
-    groups: "{{ system_user }},nginx,nobody"
+    groups: "{{ system_user }},nginx,nobody,redis"
 
 - name: Ensure install directory exists
   ansible.builtin.file:
@@ -187,36 +187,6 @@
     state: absent
   with_items: "{{ nginx_extra_sites.files }}"
   notify: Restart nginx
-
-#
-# Redis
-#
-
-# Redis will be disabled if the host's total memory is <= 1GB
-- name: Check Memory for Redis inclusion
-  ansible.builtin.set_fact:
-    use_redis: false
-  when:
-    - use_redis is defined
-    - use_redis
-    - ansible_memtotal_mb <= 1024
-
-- name: Include Redis role
-  ansible.builtin.include_role:
-    name: inmotionhosting.redis
-    public: true
-  when:
-    - use_redis is defined
-    - use_redis
-
-- name: Add redis group to system_user ({{ system_user }})
-  ansible.builtin.user:
-    name: "{{ system_user }}"
-    groups: redis
-    append: true
-  when:
-    - use_redis is defined
-    - use_redis
 
 #
 # WordPress
