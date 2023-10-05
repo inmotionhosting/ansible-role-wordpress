@@ -2,7 +2,7 @@
 # {{ ansible_managed }}
 
 
-upstream http_backend {
+upstream apache {
 {% if use_letsencrypt is defined and use_letsencrypt|bool %}
     server 127.0.0.1:8443;
 {%- else %}
