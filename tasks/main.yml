@@ -238,7 +238,7 @@
       become: true
       become_user: "{{ system_user }}"
       changed_when: false
-      when: "'flush' in search_replace.stdout"
+      when: "'skipped' not in search_replace"
 
     - name: Ensure WordPress siteurl and homeurl are correct
       ansible.builtin.command: >-
