@@ -228,6 +228,17 @@
           if use_letsencrypt is defined
           and use_letsencrypt | bool
           else "http://" }}
+      register: search_replace
+
+    - name: Flush WordPress persistent object cache
+      ansible.builtin.command: >-
+        wp cache flush
+      args:
+        chdir: "{{ wp_system_path }}"
+      become: true
+      become_user: "{{ system_user }}"
+      changed_when: false
+      when: "'skipped' not in search_replace"
 
     - name: Ensure WordPress siteurl and homeurl are correct
       ansible.builtin.command: >-
@@ -269,3 +280,11 @@
       when: nginx_helper_cache_path.stdout != nginx_cache_path
       vars:
         nginx_cache_path: "{{ nginx_cache_dir }}/{{ nginx_cache_name }}"
+
+#
+# SELinux
+#
+
+- name: Enable and configure SELinux
+  ansible.builtin.include_tasks: selinux.yml
+  when: ansible_selinux.status == "enabled"
