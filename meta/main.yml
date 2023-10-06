@@ -31,8 +31,8 @@ galaxy_info:
     - redis
 
 dependencies:
-  - role: inmotionhosting.apache
-  - role: inmotionhosting.mysql
-  - role: inmotionhosting.php_fpm
-  - role: inmotionhosting.nginx_proxy
-  - role: inmotionhosting.redis
+  - inmotionhosting.apache
+  - inmotionhosting.mysql
+  - inmotionhosting.php_fpm
+  - inmotionhosting.nginx_proxy
+  - inmotionhosting.redis

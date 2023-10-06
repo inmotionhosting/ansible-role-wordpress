@@ -1,0 +1,2 @@
+# This file contains ignores rule violations for ansible-lint
+meta/main.yml schema[meta]
