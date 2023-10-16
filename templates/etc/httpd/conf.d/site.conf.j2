@@ -10,6 +10,50 @@
 </IfModule>
 {% endif %}
 
+{% if site_domain != ansible_fqdn %}
+<VirtualHost *:{{ apache_port_https }}>
+    ServerName {{ ansible_fqdn }}
+    ServerAlias www.{{ ansible_fqdn }}
+
+    ErrorLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-error.log
+    CustomLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-access.log combined
+
+    SSLEngine On
+    SSLCertificateFile /etc/letsencrypt/live/{{ ansible_fqdn }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ ansible_fqdn }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ ansible_fqdn }}/chain.pem
+
+    <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://{{ system_user }}">
+        ProxySet disablereuse=off
+    </Proxy>
+
+    <FilesMatch \.php$>
+        SetHandler proxy:fcgi://{{ system_user }}
+    </FilesMatch>
+
+    DocumentRoot {{ wp_system_path }}
+    DirectoryIndex index.html index.php
+
+    TraceEnable Off
+
+    <Location "/status">
+        Order Allow,Deny
+        Allow from 127.0.0.1
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/status
+    </Location>
+
+    <Location "/fpm-ping">
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
+    </Location>
+
+    <Directory {{ wp_system_path }}>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+{% endif %}
+
 {% if not use_letsencrypt | bool %}
 <VirtualHost *:{{ apache_port_http }}>
     ServerName {{ site_domain }}
