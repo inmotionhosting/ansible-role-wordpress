@@ -205,7 +205,7 @@
 
     - name: Get WordPress Site Url
       ansible.builtin.command: >-
-        wp option get siteurl
+        wp option get siteurl --skip-plugins --skip-themes
       args:
         chdir: "{{ wp_system_path }}"
       become: true
@@ -215,7 +215,7 @@
 
     - name: Replace all site urls in database if changed
       ansible.builtin.command: >-
-        wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}"
+        wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes
       args:
         chdir: "{{ wp_system_path }}"
       become: true
@@ -242,7 +242,7 @@
 
     - name: Ensure WordPress siteurl and homeurl are correct
       ansible.builtin.command: >-
-        wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}"
+        wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes
       args:
         chdir: "{{ wp_system_path }}"
       become: true
@@ -260,7 +260,7 @@
 
     - name: Check current value of RT_WP_NGINX_HELPER_CACHE_PATH
       ansible.builtin.command: >-
-        wp config get RT_WP_NGINX_HELPER_CACHE_PATH
+        wp config get RT_WP_NGINX_HELPER_CACHE_PATH --skip-plugins --skip-themes
       args:
         chdir: "{{ wp_system_path }}"
       become: true
@@ -271,7 +271,7 @@
 
     - name: Ensure NGINX Helper Cache Path is correct
       ansible.builtin.command: >-
-        wp config set RT_WP_NGINX_HELPER_CACHE_PATH "{{ nginx_cache_path }}"
+        wp config set RT_WP_NGINX_HELPER_CACHE_PATH "{{ nginx_cache_path }}" --skip-plugins --skip-themes
       args:
         chdir: "{{ wp_system_path }}"
       become: true
