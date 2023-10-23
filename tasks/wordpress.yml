@@ -61,6 +61,16 @@
   become: true
   become_user: "{{ system_user }}"
 
+- name: Set DB_HOST to mysql unixsocket
+  ansible.builtin.command: >-
+    wp config set DB_HOST
+    "localhost:{{ mysql_socket_path }}"
+  args:
+    chdir: "{{ wp_system_path }}"
+  become: true
+  become_user: "{{ system_user }}"
+  changed_when: false
+
 - name: Install WordPress core
   ansible.builtin.command: >-
     wp core install
