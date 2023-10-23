@@ -23,34 +23,19 @@
     SSLCertificateKeyFile /etc/letsencrypt/live/{{ ansible_fqdn }}/privkey.pem
     SSLCertificateChainFile /etc/letsencrypt/live/{{ ansible_fqdn }}/chain.pem
 
-    <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://{{ system_user }}">
-        ProxySet disablereuse=off
-    </Proxy>
+    SSLProxyEngine on
+    SSLProxyCheckPeerCN off
+    SSLProxyCheckPeerExpire off
+    SSLProxyCheckPeerName off
+    SSLProxyVerify none 
+    SSLSessionTickets on
 
-    <FilesMatch \.php$>
-        SetHandler proxy:fcgi://{{ system_user }}
-    </FilesMatch>
+    ProxyRequests off
+    ProxyAddHeaders off
+    ProxyPreserveHost off
 
-    DocumentRoot {{ wp_system_path }}
-    DirectoryIndex index.html index.php
-
-    TraceEnable Off
-
-    <Location "/status">
-        Order Allow,Deny
-        Allow from 127.0.0.1
-        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/status
-    </Location>
-
-    <Location "/fpm-ping">
-        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
-    </Location>
-
-    <Directory {{ wp_system_path }}>
-        Options FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
+    ProxyPass / https://{{ site_domain }} ttl=1 disablereuse=On
+    ProxyPassReverse / https://{{ site_domain }}
 </VirtualHost>
 {% endif %}
 
