@@ -10,6 +10,40 @@
 </IfModule>
 {% endif %}
 
+{% if site_domain != ansible_fqdn %}
+<VirtualHost *:{{ apache_port_https }}>
+    ServerName {{ ansible_fqdn }}
+    ServerAlias www.{{ ansible_fqdn }}
+
+    ErrorLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-error.log
+    CustomLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-access.log combined
+
+    SSLEngine On
+    SSLCertificateFile /etc/letsencrypt/live/{{ ansible_fqdn }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ ansible_fqdn }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ ansible_fqdn }}/chain.pem
+
+    SSLProxyEngine on
+    SSLProxyCheckPeerCN off
+    SSLProxyCheckPeerExpire off
+    SSLProxyCheckPeerName off
+    SSLProxyVerify none 
+    SSLSessionTickets on
+
+    ProxyRequests off
+    ProxyAddHeaders off
+    ProxyPreserveHost off
+
+    ProxyPass / {% if not use_letsencrypt | bool %}http{% else %}https{% endif %}://{{ site_domain }}/ ttl=1 disablereuse=On
+    ProxyPassReverse / {% if not use_letsencrypt | bool %}http{% else %}https{% endif %}://{{ site_domain }}/
+
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET,POST,PUT,DELETE,OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type,Authorization,X-Requested-With,X-BGC-Auth"
+    Header set Access-Control-Allow-Credentials "true"
+</VirtualHost>
+{% endif %}
+
 {% if not use_letsencrypt | bool %}
 <VirtualHost *:{{ apache_port_http }}>
     ServerName {{ site_domain }}
