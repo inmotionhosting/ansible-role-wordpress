@@ -34,8 +34,13 @@
     ProxyAddHeaders off
     ProxyPreserveHost off
 
-    ProxyPass / https://{{ site_domain }} ttl=1 disablereuse=On
-    ProxyPassReverse / https://{{ site_domain }}
+    ProxyPass / {% if not use_letsencrypt | bool %}http{% else %}https{% endif %}://{{ site_domain }}/ ttl=1 disablereuse=On
+    ProxyPassReverse / {% if not use_letsencrypt | bool %}http{% else %}https{% endif %}://{{ site_domain }}/
+
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET,POST,PUT,DELETE,OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type,Authorization,X-Requested-With,X-BGC-Auth"
+    Header set Access-Control-Allow-Credentials "true"
 </VirtualHost>
 {% endif %}
 
