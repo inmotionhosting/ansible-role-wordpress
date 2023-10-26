@@ -5,11 +5,11 @@ roles:
   - name: inmotionhosting.mysql
     version: 2.1.0
   - name: inmotionhosting.php_fpm
-    version: 2.1.0
+    version: 2.3.0
   - name: inmotionhosting.nginx_proxy
-    version: 2.4.2
+    version: 2.5.1
   - name: inmotionhosting.redis
-    version: 2.2.0
+    version: 2.2.1
 collections:
   - name: community.general
   - name: community.mysql

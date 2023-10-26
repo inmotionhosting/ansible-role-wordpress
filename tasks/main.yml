@@ -139,7 +139,7 @@
   when: not php_ini_result.stat.exists
 
 - name: Check syntax for "{{ php_fpm_daemon }}"
-  ansible.builtin.command: "{{ php_fpm_daemon }} -t"
+  ansible.builtin.command: "{{ php_fpm_binary }} -t"
   register: phpfpm_syntax
   changed_when: false
   ignore_errors: true
