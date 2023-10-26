@@ -3,6 +3,7 @@
   ansible.builtin.service:
     name: "{{ apache_daemon }}"
     state: restarted
+  when: apache_syntax.rc == 0
 
 - name: Restart mysql
   ansible.builtin.service:
@@ -13,8 +14,10 @@
   ansible.builtin.service:
     name: "{{ php_fpm_daemon }}"
     state: restarted
+  when: phpfpm_syntax.rc == 0
 
 - name: Restart nginx
   ansible.builtin.service:
     name: nginx
     state: restarted
+  when: nginx_syntax.rc == 0
