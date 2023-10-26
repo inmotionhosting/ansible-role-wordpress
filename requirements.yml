@@ -1,15 +1,24 @@
 ---
 roles:
   - name: inmotionhosting.apache
-    version: 2.1.0
+    src: git+ssh://git@github.com/inmotionhosting/ansible-role-apache.git
+    version: "2.1.0"
+
   - name: inmotionhosting.mysql
-    version: 2.1.0
-  - name: inmotionhosting.php_fpm
-    version: 2.3.0
+    src: git+ssh://git@github.com/inmotionhosting/ansible-role-mysql.git
+    version: "2.1.0"
+
   - name: inmotionhosting.nginx_proxy
-    version: 2.5.1
+    src: git+ssh://git@github.com/inmotionhosting/ansible-role-nginx_proxy.git
+    version: "2.5.1"
+
+  - name: inmotionhosting.php_fpm
+    src: git+ssh://git@github.com/inmotionhosting/ansible-role-php_fpm.git
+    version: "2.3.0"
+
   - name: inmotionhosting.redis
-    version: 2.2.1
+    src: git+ssh://git@github.com/inmotionhosting/ansible-role-redis.git
+    version: "2.2.1"
 collections:
   - name: community.general
   - name: community.mysql
