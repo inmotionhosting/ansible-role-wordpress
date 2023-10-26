@@ -70,6 +70,12 @@
   with_items: "{{ apache_extra_sites.files }}"
   notify: Restart apache
 
+- name: Check syntax for "{{ apache_daemon }}"
+  ansible.builtin.command: "{{ apache_daemon }} -t"
+  register: apache_syntax
+  changed_when: false
+  ignore_errors: true
+
 #
 # PHP
 #
@@ -132,6 +138,12 @@
     mode: "0644"
   when: not php_ini_result.stat.exists
 
+- name: Check syntax for "{{ php_fpm_daemon }}"
+  ansible.builtin.command: "{{ php_fpm_daemon }} -t"
+  register: phpfpm_syntax
+  changed_when: false
+  ignore_errors: true
+
 #
 # NGINX
 #
@@ -187,6 +199,13 @@
     state: absent
   with_items: "{{ nginx_extra_sites.files }}"
   notify: Restart nginx
+
+- name: Check syntax for "{{ nginx_daemon }}""
+  ansible.builtin.command: "{{ nginx_daemon}} -t"
+  register: nginx_syntax
+  changed_when: false
+  ignore_errors: true
+  tags: profile
 
 #
 # WordPress
