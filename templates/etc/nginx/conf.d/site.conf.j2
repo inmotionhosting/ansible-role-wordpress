@@ -117,7 +117,7 @@ server {
     }
 {% endif %}
 
-    location ~ {{ nginx_cache_bypass_paths }} {
+    location ~ "{{ nginx_cache_bypass_paths }}" {
         proxy_no_cache 1;
         proxy_cache_bypass 1;
         add_header X-Proxy-Cache $upstream_cache_status;
