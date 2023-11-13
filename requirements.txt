@@ -3,5 +3,5 @@
 ansible-lint
 ansible
 molecule-plugins[docker]
-molecule>=5,<6
+molecule
 pre-commit
