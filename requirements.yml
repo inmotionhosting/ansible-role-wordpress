@@ -21,5 +21,8 @@ roles:
     version: "2.2.1"
 collections:
   - name: community.general
+    source: https://old-galaxy.ansible.com
   - name: community.mysql
+    source: https://old-galaxy.ansible.com
   - name: ansible.posix
+    source: https://old-galaxy.ansible.com
