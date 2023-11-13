@@ -20,6 +20,6 @@ roles:
     src: https://github.com/inmotionhosting/ansible-role-redis
     version: "2.2.1"
 collections:
-  - name: community.general
-  - name: community.mysql
-  - name: ansible.posix
+  - name: git+git@github.com:ansible-collections/community.general.git
+  - name: git+git@github.com:ansible-collections/community.mysql.git
+  - name: git+git@github.com:ansible-collections/ansible.posix.git
