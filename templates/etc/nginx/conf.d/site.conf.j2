@@ -56,12 +56,6 @@ server {
         set $cache_bypass 1;
     }
 
-{% if use_letsencrypt is defined and use_letsencrypt|bool %}
-    if ($scheme != "https") {
-        return 301 https://$host$request_uri;
-    }
-{% endif %}
-
     location / {
         add_header X-Proxy-Cache $upstream_cache_status;
 
