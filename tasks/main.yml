@@ -268,22 +268,56 @@
       when: "'skipped' not in search_replace"
 
     - name: Ensure WordPress siteurl and homeurl are correct
-      ansible.builtin.command: >-
-        wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes
-      args:
-        chdir: "{{ wp_system_path }}"
-      become: true
-      become_user: "{{ system_user }}"
+      block:
+        - name: Set WordPress siteurl and homeurl with wp-cli
+          ansible.builtin.command: >-
+            wp option set {{ item }} "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes
+          args:
+            chdir: "{{ wp_system_path }}"
+          become: true
+          become_user: "{{ system_user }}"
+          changed_when: false
+          vars:
+            wp_protocol: >-
+              {{ "https://"
+              if use_letsencrypt is defined
+              and use_letsencrypt | bool
+              else "http://" }}
+          with_items:
+            - siteurl
+            - home
+      rescue:
+        - name: Set WordPress siteurl and homeurl constants in wp-config.php
+          ansible.builtin.lineinfile:
+            path: "{{ wp_system_path }}/wp-config.php"
+            regexp: define\s*\(\s*'{{ item }}'\s*,\s*'([^']+)'\s*\);
+            line: define( '{{ item }}', '{{ wp_protocol }}{{ site_domain }}' );
+            insertbefore: "That's all, stop editing!"
+            state: present
+          vars:
+            wp_protocol: >-
+              {{ "https://"
+              if use_letsencrypt is defined
+              and use_letsencrypt | bool
+              else "http://" }}
+          with_items:
+            - WP_HOME
+            - WP_SITEURL
+
+- name: Issue certificate or set use_letsencrypt=false
+  tags: always
+  block:
+    - name: Generate new certificate if one doesn't exist.
+      ansible.builtin.command: "{{ certbot_create_command }}"
+      when:
+        - not letsencrypt_cert.stat.exists
+        - site_domain is defined
+        - site_domain | length > 0
       changed_when: false
-      vars:
-        wp_protocol: >-
-          {{ "https://"
-          if use_letsencrypt is defined
-          and use_letsencrypt | bool
-          else "http://" }}
-      with_items:
-        - siteurl
-        - home
+  rescue:
+    - name: Disable Let's Encrypt if unable to issue cert
+      ansible.builtin.set_fact:
+        use_letsencrypt: false
 
     - name: Check current value of RT_WP_NGINX_HELPER_CACHE_PATH
       ansible.builtin.command: >-
