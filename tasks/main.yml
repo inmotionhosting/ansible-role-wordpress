@@ -144,6 +144,14 @@
   changed_when: false
   ignore_errors: true
 
+- name: Create PHP Session directory
+  ansible.builtin.file:
+    path: "{{ php_conf_session_save_path }}"
+    state: directory
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: "0755"
+
 #
 # NGINX
 #
