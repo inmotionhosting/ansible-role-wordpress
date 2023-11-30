@@ -3,7 +3,7 @@
 # tags: site.conf.j2
 
 
-{% if site_domain != ansible_fqdn %}
+{% if site_domain != ansible_nodename %}
 server {
     listen 80;
     listen 443 ssl http2;

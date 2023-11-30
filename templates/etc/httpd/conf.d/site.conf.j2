@@ -10,7 +10,7 @@
 </IfModule>
 {% endif %}
 
-{% if site_domain != ansible_fqdn %}
+{% if site_domain != ansible_nodename %}
 <VirtualHost *:{{ apache_port_https }}>
     ServerName {{ ansible_fqdn }}
     ServerAlias www.{{ ansible_fqdn }}
