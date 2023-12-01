@@ -152,6 +152,22 @@
     group: "{{ system_user }}"
     mode: "0755"
 
+- name: Create logrotate config for PHP error log
+  ansible.builtin.copy:
+    dest: /etc/logrotate.d/php-error-log
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      /home/*/logs/*.php.error.log {
+              weekly
+              missingok
+              notifempty
+              rotate 1
+              dateext
+              sharedscripts
+      }
+
 #
 # NGINX
 #
