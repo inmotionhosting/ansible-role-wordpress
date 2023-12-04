@@ -98,7 +98,7 @@
     SSLEngine On
     SSLCertificateFile /etc/letsencrypt/live/{{ site_domain }}/cert.pem
     SSLCertificateKeyFile /etc/letsencrypt/live/{{ site_domain }}/privkey.pem
-    {% if not is_self_signed %}SSLCertificateChainFile /etc/letsencrypt/live/{{ site_domain }}/chain.pem{% endif %}
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ site_domain }}/chain.pem
 
     <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://{{ system_user }}">
         ProxySet disablereuse=off
