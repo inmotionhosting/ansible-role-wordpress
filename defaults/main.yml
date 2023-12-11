@@ -209,8 +209,3 @@ selinux_booleans:
   - httpd_can_network_connect
   - httpd_can_network_connect_db
   - httpd_read_user_content
-
-#
-# SSL
-#
-is_self_signed: false
