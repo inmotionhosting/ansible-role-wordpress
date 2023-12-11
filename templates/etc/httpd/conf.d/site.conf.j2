@@ -12,16 +12,16 @@
 
 {% if site_domain != ansible_nodename %}
 <VirtualHost *:{{ apache_port_https }}>
-    ServerName {{ ansible_fqdn }}
-    ServerAlias www.{{ ansible_fqdn }}
+    ServerName {{ ansible_nodename }}
+    ServerAlias www.{{ ansible_nodename }}
 
-    ErrorLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-error.log
-    CustomLog /var/log/{{ apache_name }}/ssl-{{ ansible_fqdn }}-access.log combined
+    ErrorLog /var/log/{{ apache_name }}/ssl-{{ ansible_nodename }}-error.log
+    CustomLog /var/log/{{ apache_name }}/ssl-{{ ansible_nodename }}-access.log combined
 
     SSLEngine On
-    SSLCertificateFile /etc/letsencrypt/live/{{ ansible_fqdn }}/cert.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/{{ ansible_fqdn }}/privkey.pem
-    SSLCertificateChainFile /etc/letsencrypt/live/{{ ansible_fqdn }}/chain.pem
+    SSLCertificateFile /etc/letsencrypt/live/{{ ansible_nodename }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ ansible_nodename }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ ansible_nodename }}/chain.pem
 
     SSLProxyEngine on
     SSLProxyCheckPeerCN off
