@@ -54,6 +54,7 @@
     group: root
     mode: "0644"
   notify: Restart apache
+  tags: siteurl
 
 - name: Identify extra site configs
   ansible.builtin.find:
@@ -62,6 +63,7 @@
     contains: '.*site\.conf\.j2.*'
     excludes: "{{ site_domain }}.conf"
   register: apache_extra_sites
+  tags: siteurl
 
 - name: Remove extra site configs
   ansible.builtin.file:
@@ -69,12 +71,14 @@
     state: absent
   with_items: "{{ apache_extra_sites.files }}"
   notify: Restart apache
+  tags: siteurl
 
 - name: Check syntax for "{{ apache_daemon }}"
   ansible.builtin.command: "{{ apache_daemon }} -t"
   register: apache_syntax
   changed_when: false
   ignore_errors: true
+  tags: siteurl
 
 #
 # PHP
@@ -88,6 +92,7 @@
     group: root
     mode: "0644"
   notify: Restart php-fpm
+  tags: siteurl, phpversion
 
 - name: Remove default www pool
   ansible.builtin.file:
@@ -105,6 +110,7 @@
     contains: '.*site\.conf\.j2.*'
     excludes: "{{ site_domain }}.conf"
   register: php_fpm_extra_pools
+  tags: siteurl, phpversion
 
 - name: Remove extra site configs
   ansible.builtin.file:
@@ -112,6 +118,7 @@
     state: absent
   with_items: "{{ php_fpm_extra_pools.files }}"
   notify: Restart php-fpm
+  tags: siteurl, phpversion
 
 - name: Check if local php.ini exists
   ansible.builtin.stat:
@@ -143,6 +150,7 @@
   register: phpfpm_syntax
   changed_when: false
   ignore_errors: true
+  tags: siteurl, phpversion
 
 - name: Create PHP Session directory
   ansible.builtin.file:
@@ -175,7 +183,7 @@
 - name: Load in profile variables for selected nginx cache profile
   ansible.builtin.include_vars:
     file: vars/nginx_cache_profiles/{{ nginx_cache_profile }}.yml
-  tags: profile
+  tags: profile, siteurl
   when: nginx_cache_profile is defined
 
 - name: Configure upstream server groups
@@ -195,7 +203,7 @@
     group: root
     mode: "0644"
   notify: Restart nginx
-  tags: profile
+  tags: profile, siteurl
 
 - name: Configure NGINX VTS module
   ansible.builtin.template:
@@ -216,6 +224,7 @@
     contains: '.*site\.conf\.j2.*'
     excludes: "{{ site_domain }}.conf"
   register: nginx_extra_sites
+  tags: siteurl
 
 - name: Remove extra site configs
   ansible.builtin.file:
@@ -223,18 +232,20 @@
     state: absent
   with_items: "{{ nginx_extra_sites.files }}"
   notify: Restart nginx
+  tags: siteurl
 
 - name: Check syntax for "{{ nginx_daemon }}""
   ansible.builtin.command: "{{ nginx_daemon}} -t"
   register: nginx_syntax
   changed_when: false
   ignore_errors: true
-  tags: profile
+  tags: profile, siteurl
 
 #
 # WordPress
 #
 - name: Check for, Install, and Configure WordPress
+  tags: siteurl
   when: install_wordpress | bool
   block:
     - name: Check for existing WordPress installation
