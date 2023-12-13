@@ -1,7 +1,7 @@
 ---
 roles:
   - name: inmotionhosting.apache
-    version: "2.1.0"
+    version: "2.2.0"
 
   - name: inmotionhosting.mysql
     version: "2.2.0"
@@ -10,7 +10,7 @@ roles:
     version: "2.5.1"
 
   - name: inmotionhosting.php_fpm
-    version: "2.3.0"
+    version: "2.4.0"
 
   - name: inmotionhosting.redis
     version: "2.2.1"
