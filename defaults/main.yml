@@ -166,6 +166,7 @@ children_buffer: 0.75
 php_allow_url_fopen: 'on'
 php_allow_url_include: 'off'
 php_catch_workers_output: 'yes'
+php_disable_functions: 'exec,passthru,shell_exec,system'
 php_request_slowlog_timeout: 0
 
 #
