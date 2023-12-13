@@ -331,21 +331,6 @@
             - WP_HOME
             - WP_SITEURL
 
-- name: Issue certificate or set use_letsencrypt=false
-  tags: always
-  block:
-    - name: Generate new certificate if one doesn't exist.
-      ansible.builtin.command: "{{ certbot_create_command }}"
-      when:
-        - not letsencrypt_cert.stat.exists
-        - site_domain is defined
-        - site_domain | length > 0
-      changed_when: false
-  rescue:
-    - name: Disable Let's Encrypt if unable to issue cert
-      ansible.builtin.set_fact:
-        use_letsencrypt: false
-
     - name: Check current value of RT_WP_NGINX_HELPER_CACHE_PATH
       ansible.builtin.command: >-
         wp config get RT_WP_NGINX_HELPER_CACHE_PATH --skip-plugins --skip-themes
