@@ -1,0 +1,9 @@
+server {
+
+    listen {{ ansible_default_ipv4.address }}:80 default_server;
+    listen 80 default_server;
+    server_name _;
+
+
+    return 444;
+}
