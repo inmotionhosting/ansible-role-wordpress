@@ -7,7 +7,7 @@ roles:
     version: "2.2.0"
 
   - name: inmotionhosting.nginx_proxy
-    version: "2.5.1"
+    version: "2.5.2"
 
   - name: inmotionhosting.php_fpm
     version: "2.4.0"
