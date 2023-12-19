@@ -3,10 +3,22 @@
 
 server {
 
-    listen {{ ansible_default_ipv4.address }}:80 default_server;
     listen 80 default_server;
     server_name _;
 
-
     return 444;
 }
+
+{% if use_letsencrypt is defined and use_letsencrypt|bool %}
+server {
+
+    listen 443 ssl http2;
+    server_name _;
+
+    ssl_certificate     /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
+
+    return 444;
+
+}
+{% endif %}
