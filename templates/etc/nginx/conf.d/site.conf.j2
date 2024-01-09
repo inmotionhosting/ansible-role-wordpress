@@ -33,7 +33,7 @@ server {
         proxy_set_header Connection "";
     }
 
-{% if goaccess_enabled | bool %}
+{% if goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
         root /usr/share/nginx/html;
         try_files $uri/report.html =404;
@@ -155,7 +155,7 @@ server {
         proxy_cache_purge sitecache "$scheme$request_method$host$1";
     }
 {% endif %}
-{% if site_domain == ansible_nodename and goaccess_enabled | bool %}
+{% if site_domain == ansible_nodename and goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
         root /usr/share/nginx/html;
         try_files $uri/report.html =404;
