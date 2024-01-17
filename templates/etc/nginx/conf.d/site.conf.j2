@@ -66,7 +66,11 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
 {% endif %}
 
+{% if site_domain.startswith('www.') %}
+    server_name {{ site_domain }} {{ site_domain[4:] }};
+{% else %}
     server_name {{ site_domain }} www.{{ site_domain }};
+{% endif %}
 
     root {{ wp_system_path }};
     

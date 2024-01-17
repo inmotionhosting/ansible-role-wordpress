@@ -90,7 +90,11 @@
 {% if use_letsencrypt|bool %}
 <VirtualHost *:{{ apache_port_https }}>
     ServerName {{ site_domain }}
+{% if site_domain.startswith('www.') %}
+    ServerAlias {{ site_domain[4:] }}
+{% else %}
     ServerAlias www.{{ site_domain }}
+{% endif %}
 
     ErrorLog /var/log/{{ apache_name }}/ssl-{{ site_domain }}-error.log
     CustomLog /var/log/{{ apache_name }}/ssl-{{ site_domain }}-access.log combined
