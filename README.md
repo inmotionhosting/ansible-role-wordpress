@@ -1,5 +1,7 @@
 ![Ansible Molecule Pipeline](https://github.com/inmotionhosting/ansible-role-wordpress/actions/workflows/main.yml/badge.svg) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-wordpress.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-wordpress/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-wordpress.svg)](https://github.com/inmotionhosting/ansible-role-wordpress/stargazers)
 
+![InMotion Hosting Ultrastack](https://www.inmotionhosting.com/wp-content/uploads/2024/01/ultrastack-logo-black-vertical.png)
+
 # Ansible Role: WordPress
 Modular Ansible Role for deploying and configuring WordPress.
 
