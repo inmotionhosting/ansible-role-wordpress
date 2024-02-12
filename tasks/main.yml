@@ -301,6 +301,7 @@
       become: true
       become_user: "{{ system_user }}"
       changed_when: false
+      failed_when: false
       when: "'skipped' not in search_replace"
 
     - name: Ensure WordPress siteurl and homeurl are correct
