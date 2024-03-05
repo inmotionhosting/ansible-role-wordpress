@@ -7,10 +7,10 @@ roles:
     version: "2.3.0"
 
   - name: inmotionhosting.nginx_proxy
-    version: "2.6.0"
+    version: "2.7.0"
 
   - name: inmotionhosting.php_fpm
-    version: "2.5.0"
+    version: "2.6.0"
 
   - name: inmotionhosting.redis
     version: "2.3.0"
