@@ -192,7 +192,6 @@ server {
     # This allows for flexible customization while maintaining core server settings.
     include /etc/nginx/user-includes.d/*.conf;
 
-
 {% if site_domain == ansible_nodename and goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
         root /usr/share/nginx/html;
