@@ -6,7 +6,9 @@
 {% if site_domain != ansible_nodename %}
 server {
     listen 80;
-    listen 443 ssl http2;
+    listen 443 ssl;
+
+    http2 on;
 
     ssl_certificate     /etc/letsencrypt/live/{{ ansible_nodename }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ ansible_nodename }}/privkey.pem;
@@ -61,7 +63,10 @@ server {
 server {
     listen 80;
 {% if use_letsencrypt is defined and use_letsencrypt|bool %}
-    listen 443 ssl http2;
+    listen 443 ssl;
+
+    http2 on;
+    
     ssl_certificate     /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
 {% endif %}
