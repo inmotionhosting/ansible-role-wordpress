@@ -10,7 +10,7 @@ roles:
     version: "3.0.1"
 
   - name: inmotionhosting.php_fpm
-    version: "3.0.0"
+    version: "3.0.1"
 
   - name: inmotionhosting.redis
     version: "2.3.0"
