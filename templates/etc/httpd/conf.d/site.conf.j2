@@ -56,7 +56,7 @@
     Redirect permanent / https://{{ site_domain }}/
 {% else %}
     <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://{{ system_user }}">
-        ProxySet disablereuse=off
+        ProxySet disablereuse=on
     </Proxy>
 
     <FilesMatch \.php$>
@@ -105,7 +105,7 @@
     SSLCertificateChainFile /etc/letsencrypt/live/{{ site_domain }}/chain.pem
 
     <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://{{ system_user }}">
-        ProxySet disablereuse=off
+        ProxySet disablereuse=on
     </Proxy>
 
     <FilesMatch \.php$>
