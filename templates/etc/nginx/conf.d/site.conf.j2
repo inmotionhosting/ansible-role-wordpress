@@ -20,6 +20,15 @@ server {
     location / {
         add_header X-Proxy-Cache $upstream_cache_status;
 
+        # If the 'rest_route' query parameter is not defined or is empty,
+        # perform a 301 (permanent) redirect to the same URI on the site domain,
+        # preserving the scheme (http or https) and the request URI, preventing
+        # the site from loading on the server hostname but allowing rest_route
+        # to be accessed over the hostname
+        if ($arg_rest_route = "") {
+            return 301 $scheme://{{ site_domain }}$request_uri;
+        }
+
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -57,6 +66,25 @@ server {
         }    
     }
 {% endif %}
+    # allow 'wp-json' to be accessed over the server hostname
+    location ~ ".*/wp-json" {
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host {{ site_domain }};
+        proxy_set_header X-Forwarded-Server {{ site_domain }};
+
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+
+        proxy_pass https://apache_ssl;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+
 }
 {% endif %}
 
