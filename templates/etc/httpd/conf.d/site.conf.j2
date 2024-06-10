@@ -44,7 +44,6 @@
 </VirtualHost>
 {% endif %}
 
-{% if not use_letsencrypt | bool %}
 <VirtualHost *:{{ apache_port_http }}>
     ServerName {{ site_domain }}
     ServerAlias www.{{ site_domain }}
@@ -85,7 +84,6 @@
     </Directory>
 {% endif %}
 </VirtualHost>
-{% endif %}
 
 {% if use_letsencrypt|bool %}
 <VirtualHost *:{{ apache_port_https }}>
