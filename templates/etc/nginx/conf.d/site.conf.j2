@@ -90,14 +90,8 @@ server {
 
 server {
     listen 80;
-{% if use_letsencrypt is defined and use_letsencrypt|bool %}
-    listen 443 ssl;
 
     http2 on;
-    
-    ssl_certificate     /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
-{% endif %}
 
 {% if site_domain.startswith('www.') %}
     server_name {{ site_domain }} {{ site_domain[4:] }};
@@ -106,7 +100,158 @@ server {
 {% endif %}
 
     root {{ wp_system_path }};
+
+    if ($http_cookie ~ "(_logged_in_|items_in_cart|jsid)") {
+        set $cache_bypass 1;
+    }
+
+    # Default Request Handling: This block is the catch-all for any requests not matched by other location
+    # blocks. It forwards requests to an Apache backend, preserving important request headers to ensure
+    # accurate IP, protocol, and host information is passed along. Caching directives are applied
+    # conditionally, based on the 'cache_bypass' variable, allowing certain requests to bypass the cache
+    # for fresh content retrieval or to avoid caching altogether. The 'X-Proxy-Cache' header provides
+    # visibility into the cache status of responses. This setup ensures that the backend handles most
+    # dynamic content, while still allowing for flexible cache control to optimize performance.
+    location / {
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+{% if not nginx_proxy_cache_enable %}
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+{% else %}
+        proxy_no_cache $cache_bypass;
+        proxy_cache_bypass $cache_bypass;
+{% endif %}
+        proxy_pass http://apache;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+
+{% if nginx_accel_static_content %}
+    # Static File Caching: This location block applies caching policies to a variety of static file types
+    # commonly served by web applications, including images, executable files, compressed archives,
+    # documents, stylesheets, scripts, fonts, and media files. The 'expires' directive sets a cache
+    # duration of 7 days, and the 'Cache-Control' header is configured to make these resources publicly
+    # cacheable while still requiring revalidation. Additionally, a custom 'X-Proxy-Cache' header marks
+    # these responses for easy identification as static resources in proxy caching mechanisms. This
+    # approach enhances client-side caching, reducing load times for repeat visitors and decreasing
+    # server load by encouraging browsers to cache these resources.
+    location ~* \.(ico|jpe?g|gif|png|bmp|svg|tiff|exe|dmg|zip|rar|7z|docx?|xlsx?|js|css|less|sass|scss|ttf|woff2?|mp3|mp4|mkv|avi|mov|mpe?g|aac|wav|flac)$ {
+        expires 7d;
+        add_header Cache-Control "public, must-revalidate";
+        add_header X-Proxy-Cache "STATIC/TYPE";
+    }
+{% endif %}
+
+{% if nginx_ratelimit_enable %}
+    # Rate Limiting for WordPress Core Files: Targets critical WordPress PHP files such as login,
+    # XML-RPC, and WP-Cron to apply rate limiting and prevent abuse (e.g., brute force attacks,
+    # spamming). The limit_req directive is configured to respond with a 429 status code if requests
+    # exceed the defined rate, allowing bursts of up to 10 requests. Caching for these requests is
+    # explicitly disabled to ensure live processing and security.
+    location ~ {{ nginx_ratelimit_paths }} {
+        limit_req_status 429;
+        limit_req zone={{ nginx_ratelimit_zone }} burst={{ nginx_ratelimit_burst }}{% if nginx_ratelimit_nodelay %} nodelay{% endif %};
+
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_pass http://apache;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+{% endif %}
+
+    # Dynamic Content Handling: This location block matches URLs for user-specific pages,
+    # administrative areas, and sensitive PHP scripts (e.g., opcache, phpinfo) where caching
+    # is not desirable to ensure fresh content delivery and security. It bypasses cache and
+    # prevents caching of these responses. Adjust patterns as necessary to match your
+    # application's URL structure for dynamic content.
+    location ~ "{{ nginx_cache_bypass_paths }}" {
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        add_header X-Proxy-Cache $upstream_cache_status;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_pass http://apache;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+    }
+
+{% if nginx_cache_purge_enable %}
+    # Cache Purging Endpoint: This location block is designed to handle cache purging requests.
+    # Only requests from the server's IP (127.0.0.1) and the server IP are allowed.
+    # The 'proxy_cache_purge' directive clears cached content for the specified URL pattern.
+    location ~ ^/purge(/.*) {
+        allow 127.0.0.1;
+        allow {{ ansible_default_ipv4.address }};
+        deny all;
+        proxy_cache_purge sitecache "$scheme$request_method$host$1";
+    }
+{% endif %}
+
+    # Include custom server configurations provided by users.
+    # This allows for flexible customization while maintaining core server settings.
+    include /etc/nginx/user-includes.d/*.conf;
+
+{% if site_domain == ansible_nodename and goaccess_enabled is defined and goaccess_enabled | bool %}
+    location /goaccess {
+        root /usr/share/nginx/html;
+        try_files $uri/report.html =404;
+
+        satisfy any;
+
+{% for ip in goaccess_allow_ips %}
+        allow {{ ip }};
+{% endfor %}
+
+        deny all;
+
+        auth_basic "Login Required";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+
+        location /goaccess/ws {
+            proxy_pass_header Upgrade;
+            proxy_pass https://localhost:7890;
+        }
+    }
+{% endif %}
+}
+
+{% if use_letsencrypt is defined and use_letsencrypt | bool %}
+server {
+    listen 443 ssl;
+
+    http2 on;
     
+    ssl_certificate     /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
+
+{% if site_domain.startswith('www.') %}
+    server_name {{ site_domain }} {{ site_domain[4:] }};
+{% else %}
+    server_name {{ site_domain }} www.{{ site_domain }};
+{% endif %}
+
+    root {{ wp_system_path }};
+
     if ($http_cookie ~ "(_logged_in_|items_in_cart|jsid)") {
         set $cache_bypass 1;
     }
@@ -199,7 +344,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;        
+        proxy_set_header X-Forwarded-Proto $scheme;
 {% if use_letsencrypt is defined and use_letsencrypt|bool %}
         proxy_pass https://apache_ssl;
 {% else %}
@@ -248,3 +393,4 @@ server {
     }
 {% endif %}
 }
+{% endif %}
