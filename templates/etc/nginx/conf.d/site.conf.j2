@@ -2,6 +2,12 @@
 # {{ ansible_managed }}
 # tags: site.conf.j2
 
+geo $inmotion_ip {
+    default 0;
+    {% for ip in goaccess_allow_ips %}
+    {{ ip }} 1;
+    {% endfor %}
+}
 
 {% if site_domain != ansible_nodename %}
 server {
@@ -63,20 +69,13 @@ server {
 
 {% if goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
+        if ($inmotion_ip = 0) {
+            return 301 https://central.inmotionhosting.com;
+        }
+
         root /usr/share/nginx/html;
         try_files $uri/report.html =404;
 
-        satisfy any;
-
-{% for ip in goaccess_allow_ips %}
-        allow {{ ip }};
-{% endfor %}
-        
-        deny all;
-
-        auth_basic "Login Required";
-        auth_basic_user_file /etc/nginx/.htpasswd;
-            
         location /goaccess/ws {
             proxy_pass_header Upgrade;
             proxy_pass https://localhost:7890;
@@ -230,19 +229,12 @@ server {
 
 {% if site_domain == ansible_nodename and goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
+        if ($inmotion_ip = 0) {
+            return 301 https://central.inmotionhosting.com;
+        }
+
         root /usr/share/nginx/html;
         try_files $uri/report.html =404;
-
-        satisfy any;
-
-{% for ip in goaccess_allow_ips %}
-        allow {{ ip }};
-{% endfor %}
-
-        deny all;
-
-        auth_basic "Login Required";
-        auth_basic_user_file /etc/nginx/.htpasswd;
 
         location /goaccess/ws {
             proxy_pass_header Upgrade;
@@ -389,19 +381,12 @@ server {
 
 {% if site_domain == ansible_nodename and goaccess_enabled is defined and goaccess_enabled | bool %}
     location /goaccess {
+        if ($inmotion_ip = 0) {
+            return 301 https://central.inmotionhosting.com;
+        }
+
         root /usr/share/nginx/html;
         try_files $uri/report.html =404;
-
-        satisfy any;
-
-{% for ip in goaccess_allow_ips %}
-        allow {{ ip }};
-{% endfor %}
-        
-        deny all;
-
-        auth_basic "Login Required";
-        auth_basic_user_file /etc/nginx/.htpasswd;
             
         location /goaccess/ws {
             proxy_pass_header Upgrade;
