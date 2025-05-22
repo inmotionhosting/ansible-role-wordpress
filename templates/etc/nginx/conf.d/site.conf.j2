@@ -23,6 +23,15 @@ server {
 
     root {{ wp_system_path }};
 
+    # Bakmgr Service Handling
+    location ^~ /ultrastack/bakmgr {
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        proxy_set_header Host $http_host;
+        proxy_set_header SCRIPT_NAME /ultrastack/bakmgr;
+        proxy_pass https://127.0.0.1:4001;
+    }
+
     location / {
         add_header X-Proxy-Cache $upstream_cache_status;
 
@@ -119,6 +128,15 @@ server {
 
     if ($http_cookie ~ "(_logged_in_|items_in_cart|jsid)") {
         set $cache_bypass 1;
+    }
+
+    # Bakmgr Service Handling
+    location ^~ /ultrastack/bakmgr {
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        proxy_set_header Host $http_host;
+        proxy_set_header SCRIPT_NAME /ultrastack/bakmgr;
+        proxy_pass https://127.0.0.1:4001;
     }
 
     # Default Request Handling: This block is the catch-all for any requests not matched by other location
@@ -263,6 +281,15 @@ server {
 
     if ($http_cookie ~ "(_logged_in_|items_in_cart|jsid)") {
         set $cache_bypass 1;
+    }
+
+    # Bakmgr Service Handling
+    location ^~ /ultrastack/bakmgr {
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+        proxy_set_header Host $http_host;
+        proxy_set_header SCRIPT_NAME /ultrastack/bakmgr;
+        proxy_pass https://127.0.0.1:4001;
     }
 
     # Default Request Handling: This block is the catch-all for any requests not matched by other location
