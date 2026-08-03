@@ -278,7 +278,7 @@
 
     - name: Replace all site urls in database if changed
       ansible.builtin.command: >-
-        wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes
+        wp search-replace "{{ siteurl.stdout }}" "{{ wp_protocol }}{{ site_domain }}" --skip-plugins --skip-themes --all-tables
       args:
         chdir: "{{ wp_system_path }}"
       become: true
