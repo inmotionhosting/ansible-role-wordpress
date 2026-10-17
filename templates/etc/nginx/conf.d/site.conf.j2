@@ -237,7 +237,7 @@ server {
         allow 127.0.0.1;
         allow {{ ansible_default_ipv4.address }};
         deny all;
-        proxy_cache_purge sitecache "$scheme$request_method$host$1";
+        proxy_cache_purge sitecache "{{ nginx_proxy_cache_key | replace('$request_uri', '$1') }}";
     }
 {% endif %}
 
@@ -398,7 +398,7 @@ server {
         allow 127.0.0.1;
         allow {{ ansible_default_ipv4.address }};
         deny all;
-        proxy_cache_purge sitecache "$scheme$request_method$host$1";
+        proxy_cache_purge sitecache "{{ nginx_proxy_cache_key | replace('$request_uri', '$1') }}";
     }
 {% endif %}
 
